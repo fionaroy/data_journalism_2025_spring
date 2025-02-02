@@ -259,5 +259,7 @@ Compared to the previous codeblock, what has changed and how did that affect the
   Compared to the previous code block, what has changed is the data is now sorted -- group_by -- by each Maryland city to see where each donation originated from, how many people per city donated, how much their total donations were all-together, what the average (mean) per donation by those people in each city was, what the midpoint (median) of the donations were, as well as the minimum (the smallest) donation amount and the maximum (the largest) donation amount was in each city. These new functions of this code are included in the summarize() function and are represented by total_amount = sum(amount), mean_amount = mean(amount), median_amount = median(amount), min_amount = min(amount), and max_amount = max(amount). Thus, the results were affected because this data now shows information pertaining to the total amount of donators and their donations, as well as the largest and smallest donations, to Republican organizations/etc. throughout each Maryland city. This data is sorted in a descending fashion on account of which city has residents who donated the largest amount of money when put together -- i.e. the "total_amount". The data set focuses on first the city with the largest sum in donations given, Annapolis, and then last on the city with the smallest sum in donations given, Washington.
   
   
+
+  
   
   
