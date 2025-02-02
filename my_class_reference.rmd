@@ -39,4 +39,173 @@ print("hello world")
 
 ```
 
+------------------------------------------------
+
+#pre_lab_01 notes#
+#R basics#
+# typing 2+2 into the console, then hitting enter will spit out number 4, function being it can compute equations and provide useful solutions. example seen below in console. however won't replicate into page, only console which is downside if want to continuously run and fix errors.#
+
+ex.
+```{r}
+2+2
+```
+
+#variables can be assigned by using left facing arros <--, called assignment operator, can be seen in consol example. can have as many variables as can be named; reusable; anything can be stored --whole table, list of numbers, single word, whole book etc.#
+
+```{r}
+number <-- 2
+```
+
+```{r}
+firstnumber <-- 1
+secondnumber <-- 2
+```
+
+```{r}
+(firstnumber + secondnumber) * secondnumber
+```
+
+#external libraries: "packages"; used to solve very specific problems -- example, Tidyverse. can install packages with function,, install.packages(),, and only have to do once
+
+```{r}
+install.packages('tidyverse')
+```
+
+
+#
+In Rmarkdown data notebooks, code is written inside of codeblocks, and explanatory text in the white area outside of it.
+```{r}
+# This is a comment inside of a codeblock. Comments doesn't run when we run the codeblock.
+# Adding this command is a good way to start your class reference notebook.
+library(tidyverse)
+```
+
+
+#Aggregates#
+#CSV: stripped down version of spreadsheet; each column is spearated by a comma#
+#RDS files: less common when getting data from elsewhere/others#
+
+RDS example: 
+```{r}
+umd_courses <- read_rds("data/umd_courses.rds")
+```
+
+#umd_courses: name of variable#
+#read_rds(): function, only works when tidyverse is loaded; function takes parts of computer code that takes info and follows a series of pre-determined steps and shoots it back out#
+#inside read_rds() is arguent: customize what function does; in this data set, each row represent course offered at UMD by departments during specific terms etc.#
+
+#when use data sets/bases: looking into environment --> see number of rows ("obs" short for observations), number of columns (variables); can double click on dataframe name in envi. and explore like spreadsheet#
+
+```{r}
+glimpse(umd_courses)
+```
+#^^will provide list of columns, data type for each column and first few values for each column#
+
+```{r}
+head(umd_courses)
+```
+#^^print out columns and first six rows of data#
+
+#package dplyr has function that can take massive amounts of data and analyze it; grouping like things together, doing simple things like counting them, averaging them together etc.#
+#to do this, take dataset and introduce new operator |> "and then do this" type of function: called "pipe operator"; (shortcut for it: ctrl-shift-m)#
+#can also use %>% --> same thing#
+
+#data |> function: basically take the data set and then do this to it (commonly done/used)#
+
+#very common pattern when using data sets:
+data |> group_by(COLUMN NAME) |> summarize(VARIABLE NAME = AGGREGATE FUNCTION(COLUMN NAME))#
+
+#in dataset, column with term information called "term"#
+
+#code to count number of courses in each term:
+
+```{r}
+umd_courses |>
+  group_by(term) |>
+  summarise(
+    count_classes = n()
+  )
+```
+dataset -- umd_course --
+name -- term -- means group together all terms; which could be gotten by using glimpse()
+after group data, need to count them up -- summarize()
+inside summarize() needs to be the summaries one wants to find, hence putting -- count_classes = n()
+-- 
+count_classes: creating new field
+setting equal to n(): fuction that counts number rows or records in each group#
+
+#but this once run, aren't in order, so add |> arrange() to put data in order; default ascending order smallest - largest#
+
+```{r}
+umd_courses |>
+  group_by(term) |>
+  summarise(
+    count_classes = n()
+  ) |>
+  arrange(desc(count_classes))
+```
+
+#can even group more than one thing#
+
+```{r}
+umd_courses |>
+  group_by(term, department) |>
+  summarise(
+    count_classes = n()
+  ) |>
+  arrange(term, department)
+```
+
+#sum(): know total number of data grouped; add up all the values in the column 
+ex. to see total number of seats --> sum(seats)#
+ex.
+```{r}
+umd_courses |>
+  group_by(term) |>
+  summarise(
+    count_classes = n(),
+    total_seats = sum(seats)
+  ) |>
+  arrange(desc(total_seats))
+```
+
+#can also calculate average number of seats (the mean) and midpoint of data (the median)#
+ex. 
+```{r}
+umd_courses |>
+  group_by(term) |>
+  summarise(
+    count_classes = n(),
+    total_seats = sum(seats),
+    mean_seats = mean(seats),
+    median_seats = median(seats)
+  ) |>
+  arrange(desc(total_seats))
+```
+
+#highest and lowest points in data are, respectively, min() and max()#
+ex.
+```{r}
+umd_courses |>
+  group_by(department) |>
+  summarise(
+    count_classes = n(),
+    total_seats = sum(seats),
+    mean_seats = mean(seats),
+    median_seats = median(seats),
+    min_seats = min(seats),
+    max_seats = max(seats)
+  ) |>
+  arrange(desc(total_seats))
+```
+
+#to sort from highest to lowest on a specific data point#
+ex. 
+```{r}
+umd_courses |>
+  arrange(desc(seats))
+```
+
+
+
 

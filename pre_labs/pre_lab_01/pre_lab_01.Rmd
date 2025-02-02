@@ -1,0 +1,263 @@
+---
+title: "pre_lab_01.Rmd"
+author: "Derek Willis"
+date: "2024-08-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(scipen=999)
+```
+
+## About this notebook
+
+This notebook contains code and explanatory text that your should review and run as you read through chapters 1 - 5 of the course textbook, "Data Journalism with R and the Tidyverse". Answer questions and edit the document as directed.
+
+Running this notebook will help you understand key data analysis methods and concepts that you will put into practice during this week's lab. When you come across a new command or verb in R, you should add it to your class reference notebook file along with what it's used for.
+
+When you are finished running the code in this notebook, you will push changes to your course GitHub repo, and upload the link to ELMS as instructed.
+
+You also should update your class reference notebook with code examples and what they mean. When you come across a new concept or R verb, put it in your reference notebook along with a sentence about what it does. For example:
+
+```{r}
+library(tidyverse)
+```
+
+The library function loads an R library such as the tidyverse, providing access to the verbs and functions that library contains. You have to load a library before you can use its functions.
+
+## Chapter 3
+
+### Task 1: The console
+
+**Task** In the console (look below), type 2+2 and hit enter. What does it return? Type your answer below.
+
+**Answer:**
+  When 2+2 is entered in the console it computes the equation and returns an answer of 4.
+
+
+### Task 2: Variables
+
+**Task** Put the following code -- which stores the numeral 2 as a variable called number -- in the console and hit enter.
+
+```{r}
+number <- 2
+```
+
+Then type this code to multiply the variable called number by itself.
+
+```{r}
+number * number
+```
+
+What does it return? Type your answer below:
+
+**Answer:**
+  These particular bits of code, when put into the console, return that when the variable 'number' is used, that it will equate to the number 2 for future computations. Thus, when the function of multiplying the variable 'number' times itself, the resulting answer becomes the number 4. 
+
+
+### Task 3: Install packages
+
+**Task** In the console, run the following code to install the Tidyverse:
+
+```{r}
+install.packages('tidyverse')
+```
+
+**Task** Add that
+
+Then run the following code to install the rmarkdown library
+
+```{r}
+install.packages('rmarkdown')
+```
+
+#--done for lab purposes, but both were already installed during class#
+
+
+## Chapter 6
+
+### Task 1: Load libraries
+
+**Task** Run the following code in the gray-colored codeblock below -- not in the console -- to load the tidyverse library. To run the code, click the little green play button (left facing arrow) at the top right of the codeblock. In Rmarkdown data notebooks, we write code inside of codeblocks, and explanatory text in the white area outside of it.
+
+```{r}
+# This is a comment inside of a codeblock. Comments doesn't run when we run the codeblock.
+# Adding this command is a good way to start your class reference notebook.
+library(tidyverse)
+```
+
+### Task 2: Load data
+
+**Task** Load the Maryland WinRed contributions dataset by running the following codeblock.
+
+```{r}
+maryland_winred_contributions <- read_rds("pre_lab_01.rds")
+```
+
+Once it loads, look at the environment window at right in RStudio for maryland_winred_contributions. It's next to a small blue circle with a white arrow in it. To the right of that, look at how many "obs" the dataset has ("obs" is short for observation, which is another way of saying rows or records). Look at how many variables it has (another way of saying columns or fields). Write the number of observations and variables below.
+
+**Answer**
+  observations: 131395 obs.
+  variables: 24 variables
+
+
+### Task 3: Glimpse data
+
+**Task** Run the following codeblock to use glimpse() to get a sense of the data, some of the values in each field/variable/column, and the data types of each field/variable/column.
+
+```{r}
+glimpse(maryland_winred_contributions)
+```
+
+In the space below, write the data type for the "last_name" column and the "amount" columns (it's in light gray, offset by \< \>). Also offer your best guess as to what the "last_name" column and the "amount" column represent.
+
+**Answer**
+  data type for "last_name": <chr>
+  data type for "amount": <dbl>
+  Additionally, my best guess as to what the "last_name" column means is the last name of the people who are represented in the maryland_winred_contributions data set, i.e. the last name's of the people whom we have data on from when they donated to a Republican party organization/foundation/etc. And thus, my guess for what the "amount" column represents is the full amount of money that these recorded people in the data set contributed in their political donations.
+
+
+### Task 4: Examine data "head"
+
+**Task** Run the following codeblock to use head() to examine the first six rows of data. Explore the data by clicking the black arrow on the right side of the output table, allowing you to examine additional columns.
+
+```{r}
+head(maryland_winred_contributions)
+```
+
+In the space below, write the first and last name from the _second_ row of the data.
+
+**Answer**
+  The first and last name from the _second_ row of data: Peggy Mukai
+
+
+### Task 5: Explore data with interactive dataframe
+
+**Task** look at the environment window at right in RStudio for maryland_winred_contributions It's next to a small blue circle with a white arrow in it. Click on the maryland_winred_contributions -- not the blue circle. It will open the dataframe as an interactive table. Scroll down to see additional rows. Scroll left to see additional columns. Click on a column name to sort by that column.
+
+### Task 6: Group and count
+
+**Task** Run the following codeblock:
+
+```{r}
+maryland_winred_contributions |>
+  group_by(date) |>
+  summarise(
+    count_contribs = n()
+  )
+```
+
+Describe what you think this code is doing below. What does the answer represent, compared to the results from `head()`?
+
+**Answer**
+  This specific code is sorting the data set first by a chronological order of the donations given by those in/affiliated with Maryland to Republican Party organizations/fundraisers/etc. Additionally, this code is then sorting how many donations were given to the Republican organizations/etc. each day starting with April 1st, 2024, and ending on June 30th, 2024. Compared to the results from 'head()' which only provides the columns and first six rows of data of the specific part of the data set one is searching through (very simplistically, and one at a time), this code is a lot more specific and versatile. This code in particular is running, combing, and combining multiple groups of information from the data set at the same time, in the same code. Specifically, this code is listing the date of the recorded donations and then analyzing how many people contributed donations specifically on that date.
+
+
+### Task 7: Adding arrange()
+
+**Task** Run the following codeblock:
+
+```{r}
+maryland_winred_contributions |>
+  group_by(date) |>
+  summarise(
+    count_contribs = n()
+  ) |>
+  arrange(desc(count_contribs))
+```
+
+Compared to the previous code block, what has changed and how did that affect the result?
+
+**Answer**
+  Compared to the previous code block, what has changed is that there is an addition to the code -- |> summarize(count_contribs = n()) |> arrange(desc(count_contribs)) -- which essentially is taking another step further in the combining, organizing, and analyzing of the data set. This step not only groups the data but it also counts it and ensures that it is counting specific information in a new field by number rows or records in each group. Then, it specifically targets this information to be arranged in descending order (largest number to smallest). Therefore, this essentially means that this code is organizing the recorded donations by the dates in which Republican organizations received the largest number of individual donations to the date in which the smallest number of individual donations were given.
+
+
+### Task 8: Multiple grouping
+
+**Task** Run the following codeblock.
+
+```{r}
+maryland_winred_contributions |>
+  group_by(memo_text, amount) |>
+  summarise(
+    count_contribs = n()
+  ) |>
+  arrange(desc(count_contribs))
+```
+
+Compared to the previous code block, what has changed and how did that affect the result?
+
+**Answer**
+  Compared to the previous code block, what has changed is that there was a modification to the grouping of which column and row are being analyzed and compared from the data set (the rest of the code structure remains the same, namely where the data is coming from and how it is being sorted once grabbed). The new group_by focus targets the column's "memo_text", which groups are receiving donations, and "amount", how much money was donated. Therefore the results now look at, in descending order, which Republican groups are receiving the largest amount of individual (separate) donations, and what that amount of money to those donations are. 
+
+
+### Task 9
+
+**Task** Run the following codeblock:
+
+```{r}
+maryland_winred_contributions |>
+  group_by(memo_text) |>
+  summarise(
+    count_contribs = n(),
+    total_amount = sum(amount)
+  ) |>
+  arrange(desc(total_amount))
+```
+
+Compared to the previous code block, what has changed and how did that affect the result? 
+
+**Answer**
+  Compared to the previous code block, what has changed is that the code is only focusing on sorting through the names of which corporations received donations -- hence "memo_text". What has also changed, is there is now another command in the summary() code -- total_amount = sum(amount) -- which focuses the code on organizing the data of the Republican organizations/etc. into who had the largest total amount of monetary donations to the smallest amount of total money donated. The code is now focused on counting, in descending order, the Republican organizations/etc. that received the largest amount of money from Maryland donations to the Republican organization/etc. that received the smallest number of money from donations. 
+
+
+
+### Task 10: More descriptive statistics
+
+**Task** Run the following codeblock to group the maryland_winred_contributions dataframe by the recipient for each contribution. Then do the following summarizations for each group:count the number of contributions, add up the value of all contributions, and calculate the mean and median contribution amounts. Then sort so the recipient with the most contributions is listed first.
+
+```{r}
+maryland_winred_contributions |>
+  group_by(memo_text) |>
+  summarise(
+    count_contribs = n(),
+    total_amount = sum(amount),
+    mean_amount = mean(amount),
+    median_amount = median(amount)
+  ) |>
+  arrange(desc(count_contribs))
+```
+
+Compared to the previous codeblock, what has changed and how did that affect the result? Glancing at the names, which of the top results from Maryland?
+
+**Answer**
+  Compared to the previous code block, what has changed is now there are additional sections of the code added to provide more context/data to the analysis of which Republican organization/etc. received the most in monetary donations versus the one that got the least money (i.e. total_amount = sum(amount), mean_amount = mean(amount), and median_amount = median(amount). To be specific, there is now information for each Republican organization/etc. on the total number of people that donated, how much the total number of their donations equaled, what the average mean of money each person donated was, and the overall midpoint of the data (the median). This affected the results by providing data on what the average donator was monetarily contributing to their Republican organization/etc. of choice. For example, the top Republican organization/etc. from Maryland appears to be HOGAN FOR MARYLAND INC.
+
+
+### Task 11
+
+**Task** Run the following codeblock to group the maryland_winred_contributions dataframe by the city for each contribution. Then do the following summarizations for each group:count the number of contributions, add up the value of all contributions, calculate the mean and median contributions amounts and calculate the smallest and largest contributions Then sort so the city with the largest total contribution amount is listed first.
+
+```{r}
+maryland_winred_contributions |>
+  group_by(city) |>
+  summarise(
+    count_contribs = n(),
+    total_amount = sum(amount),
+    mean_amount = mean(amount),
+    median_amount = median(amount),
+    min_amount = min(amount),
+    max_amount = max(amount)
+  ) |>
+  arrange(desc(total_amount))
+```
+
+Compared to the previous codeblock, what has changed and how did that affect the result? How is the data sorted?
+
+**Answer**
+  Compared to the previous code block, what has changed is the data is now sorted -- group_by -- by each Maryland city to see where each donation originated from, how many people per city donated, how much their total donations were all-together, what the average (mean) per donation by those people in each city was, what the midpoint (median) of the donations were, as well as the minimum (the smallest) donation amount and the maximum (the largest) donation amount was in each city. These new functions of this code are included in the summarize() function and are represented by total_amount = sum(amount), mean_amount = mean(amount), median_amount = median(amount), min_amount = min(amount), and max_amount = max(amount). Thus, the results were affected because this data now shows information pertaining to the total amount of donators and their donations, as well as the largest and smallest donations, to Republican organizations/etc. throughout each Maryland city. This data is sorted in a descending fashion on account of which city has residents who donated the largest amount of money when put together -- i.e. the "total_amount". The data set focuses on first the city with the largest sum in donations given, Annapolis, and then last on the city with the smallest sum in donations given, Washington.
+  
+  
+  
+  
