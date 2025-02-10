@@ -432,6 +432,12 @@ nrow(and_theatre_seats_15)
 #advice is to use filters one at a time and look at changes rather than doing multiple at once --> easier to see what is working this way#
 
 
+#to turn off scientific notation in a notebook#
+
+```{r}
+# turn off sci notation
+options(scipen=999)
+```
 
 
 
