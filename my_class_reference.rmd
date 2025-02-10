@@ -291,6 +291,64 @@ maryland_expenses_with_state |>
 ```
 
 
+Chapter 17: Working with dates
+
+#correct way to display dates: YYYY-MM-DD#
+
+#problem so common that the tidyverse has an entire library for dealing with it -- lubridate -- to solve more common and less tricky problem
+
+```{r}
+install.packages('lubridate')
+```
+
+#example run through#
+
+```{r}
+maryland_expenses <- read_csv("data/maryland_expenses.csv")
+```
+
+```{r}
+head(maryland_expenses)
+```
+
+#the first column --> looks like a date, but the -- <chr -- below the column name, means R thinks it's actually a character column: so need to make into a actual date column, which lubridate is good at doing; has variety of functions that match the format of the data#
+
+#in this case, current format is m/d/y, and the lubridate function is called mdy that can be used with mutate#
+
+```{r}
+maryland_expenses <- maryland_expenses |> mutate(expenditure_date=mdy(expenditure_date))
+```
+
+```{r}
+head(maryland_expenses)
+```
+
+#now R will recognize the column as a date column and looks like it should -- YYYY-MM-DD#
+
+#lubridate has functions for almost any type of character date format, mdy, ymd, even datetimes like ymd_hms#
+
+#the -- readr -- anticipates some date formating and can automatically handle many issues (indeed uses lubridate under its hood)#
+
+#when importing CSV file, be sure to use read_csv, not read.csv#
+
+#in spreadsheets can extract portions of dates --a month, day or year-- with formulas: can do same in R with lubridate
+
+#Let’s say we wanted to add up the total amount spent in each month in our Maryland expenses data.
+
+We could use formatting to create a Month field but that would group all the Aprils ever together. We could create a year and a month together, but that would give us an invalid date object and that would create problems later. Lubridate has something called a floor date that we can use.
+
+So to follow along here, we’re going to use mutate to create a month field, group by to lump them together, summarize to count them up and arrange to order them. We’re just chaining things together.#
+
+```{r}
+maryland_expenses |>
+  mutate(month = floor_date(expenditure_date, "month")) |>
+  group_by(month) |>
+  summarise(total_amount = sum(amount)) |>
+  arrange(desc(total_amount))
+```
+
+
+
 
 
 
