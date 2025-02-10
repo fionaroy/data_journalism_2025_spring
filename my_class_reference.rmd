@@ -349,6 +349,89 @@ maryland_expenses |>
 
 
 
+Chapter 16: Filters and selections
+
+#often have more data then necessary --> sometimes want to be rid of data#
+
+#dplyr --> filtering and selecting#
+
+#Filtering creates a subset of the data based on criteria. All records where the amount is greater than 150,000. All records that match “College Park”. Something like that. Filtering works with rows – when we filter, we get fewer rows back than we start with.#
+
+#Selecting simply returns only the fields named. So if you only want to see city and amount, you select those fields. When you look at your data again, you’ll have two columns. If you try to use one of your columns that you had before you used select, you’ll get an error. Selecting works with columns. You will have the same number of records when you are done, but fewer columns of data to work with.#
+
+#run through an example#
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+umd_courses <- read_rds("data/umd_courses.rds")
+```
+
+
+#if want to see only those courses offered by particular department, can use -- filter -- function to isolate just those records#
+
+#filter works with something called a comparison operator: need to filter all records equal to "journalism": comparison operators in R, like most programing languages, are == for equal to, != for not equal to, > for greater than, >= for greater than or equal to and so on#
+
+#!!!!!! -- be careful: = is not == -- and = is not "equal to"
+
+= is an assignment operator in most languages - how things are named#
+
+```{r}
+journalism_courses <- umd_courses |> filter(department == "Journalism")
+
+head(journalism_courses)
+```
+
+#if want to only work with course id and title...#
+
+```{r}
+selected_journalism_courses <- journalism_courses |> select(id, title)
+
+head(selected_journalism_courses)
+```
+
+
+#if want to see only all the courses in theatre dept. with at least 15 seats#
+
+#first way; chain together multiple filters#
+
+```{r}
+theatre_seats_15 <- umd_courses |> filter(department == "Theatre") |> filter(seats >= 15)
+
+nrow(theatre_seats_15)
+```
+
+#gives up 308 records, but a single filter and boolean operators -- AND and OR -- can do this better#
+
+#in this case, AND is & and OR is |#
+
+#difference? with AND --> all conditions must be true to be included#
+
+#difference? with OR --> any of those conditions things can be true and it will be included#
+
+```{r}
+and_theatre_seats_15 <- umd_courses |> filter(department == "Theatre" & seats >= 15)
+
+nrow(and_theatre_seats_15)
+```
+
+#AND here gives the same answer as the attempt before#
+
+```{r}
+and_theatre_seats_15 <- umd_courses |> filter(department == "Theatre" | seats >= 15)
+
+nrow(and_theatre_seats_15)
+```
+
+#OR gives 54,000 rows that are EITHER theatre classes OR have at least 15 seats#
+
+#OR is additive; AND is restrictive#
+
+#advice is to use filters one at a time and look at changes rather than doing multiple at once --> easier to see what is working this way#
+
+
 
 
 
