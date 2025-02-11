@@ -59,7 +59,8 @@ primary_24 |>
 
 Describe what you think this code is doing below.
 
-**Answer**
+**Answer** This particular code is using the data provided inside of the primary_24 csv to calculate the percent of votes each individual candidate received on only election day (out of the total amount of votes each candidate received among all voting options).
+
 
 ### Task 5: Better percentage calculation
 
@@ -90,7 +91,8 @@ primary_24 |>
 
 How did the results change from the previous task, and why?
 
-**Answer**
+**Answer** The results changed from the previous task due to the additional changes made to the code. By adding a multiply by 100 to the mutating percent command, the percent is put in the correct decimal place to make it easier to read. Additionally, by arranging the data after mutating it in descending order, the data is now structured to show the candidates who received all, or as close as possible, of their votes during this primary exclusively on election day versus those who received votes by other means as well as votes on election day. The previous task only ordered the information alphabetically by county name first, then by candidate name -- not by the actual percents.
+
 
 ### Task 7: Mutate with ordering, part 2
 
@@ -108,7 +110,8 @@ primary_24 |>
 
 Is this a more interesting or useful answer? Why?
 
-**Answer**
+**Answer** I think that this answer could be more interesting or useful depending on what it is exactly one is looking for within this data. However, I do think that it is interesting to compare both the ascending order and the descending order to see which candidates received all (or almost all)/none (or almost none) or their votes on election day, versus which counties had the highest/lowest turnout on in-person election day voting. In regard specifically to ascending order data, I think that it provides useful information on which counties, and more specifically which candidates, were most unpopular during this election. It would be useful to know as one could write a election follow-up story on why this might be (policy, advertising issues etc.). 
+
 
 ### Task 8: Standardize existing data using mutate
 
@@ -138,7 +141,8 @@ standardized_maryland_cities <- maryland_cities |>
 
 **Task** Search the Internet for tidyverse functions similar to str_to_upper. Name at least two and describe what they do.
 
-**Answer**
+**Answer** According to information pulled from stringer.tidyverse.org/reference/case.html, two functions similar to str_to_upper are str_to_title() which will convert data to what is called title case -- only the first letter of every word will be capitalized -- and str_to_sentence() which converts the data to sentence case -- only the first letter of a sentence is capitalized.
+
 
 There are lots of potential uses for standardization - addresses, zip codes, anything that can be misspelled or abbreviated.
 
@@ -166,7 +170,7 @@ Now that we've gotten a look, we can use `case_when` to give our new category co
 
 **Task** Run the following code and look at the output. Then write a sentence or two describing what you think the mutate statement is doing step by step.
 
-**Answer**
+**Answer** This code's mutate statement is organizing the first six rows of the maryland_winred data to show an additional column, created through the use of case_when inside of a mutate statement, to show which people donated less than 100 dollars, between 100-499 dollars, between 500-1499 dollars, between 500-2999 dollars, and who donated 3,000 or more. As the head function only provides the first six rows of data as a display example, the rows that are present show, with the aid of the new mutate statement, that these donors all donated less than $100.
 
 ```{r}
 maryland_winred_categories <- maryland_winred_contributions |>
@@ -196,7 +200,7 @@ maryland_winred_categories |>
 ```
 What's the largest category in terms of dollar amount?
 
-**Answer** 
+**Answer** The largest category in terms of dollar amount is "Less than $100" as it has the largest amount of money in their total_amount column (more people donated less than 100 dollars total than those who donated between 500-2999 dollars in one go). 
 
 Mutate is there to make your data more useful and to make it easier for you to ask more and better questions of it.
 
@@ -244,7 +248,8 @@ And now we only have five columns of data for whatever analysis we might want to
 
 Notice that we made a new variable to hold the result. Why is that important?
 
-**Answer**
+**Answer** It is important to make a new variable to hold the result when selecting and not filtering because selecting is different from filtering. Selecting is only meant to extract data from specific columns from the original data source without altering it. Therefore, in order to not make unwanted edits to the original source of data, a new variable needs to be assigned to allow the selected columns/data to be edited or analyzed independently of the original source. 
+
 
 ### Task 12: Combining filters
 
@@ -306,7 +311,7 @@ maryland_expenses <- maryland_expenses |> mutate(expenditure_date=mdy(expenditur
 head(maryland_expenses)
 ```
 
-**Answer:**
+**Answer:** The expenditure_data column, with the assistance of lubridate, now appropriately is characterized as a date column, and the format in which the dates are displayed match the most common global format YYYY-MM-DD. 
 
 Lubridate has functions for basically any type of character date format: mdy, ymd, even datetimes like ymd_hms.
 
@@ -342,4 +347,6 @@ So the month of June 2022 had the most expenditures by far in this data. We'll b
 
 Describe the values in the new `month` column - what do you think the data is showing here?
 
-**Answer**
+**Answer** This data in the new 'month' column are showing the total amount of money each month that specific governmental/federal committees are spending in total. This can be understood by looking at how the expenditure_date was mutated to correlate with the new 'month' column, and how it is now grouped by this new 'month' column which is summarized by the total_amount (in descending order largest to smallest charges) of money spent.
+
+
