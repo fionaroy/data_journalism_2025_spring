@@ -40,6 +40,8 @@ Take a look at the data, getting familiar with what it contains. Most of the col
 **A1**
 
 ```{r}
+md_voters_2024
+
 ```
 
 **Q2** A better question is whether the new voters you found in Q1 are an outlier compared to other weeks this year. Using the original dataframe with 2024 registrants, use `mutate()` and lubridate to produce week numbers from the COUNTY_REGISTRATION_DATE (Lubridate has a function that turns a date into a week number. Use that to answer this question). Save that to the original dataframe. Then calculate how many voters are in each week. Describe the distribution of voters groups in a sentence - are the weeks from July 21-August 7 different from the rest, and if so, how?
@@ -47,9 +49,11 @@ Take a look at the data, getting familiar with what it contains. Most of the col
 **A2**
 
 ```{r}
+
 ```
 
 **Q3** Using lubridate, show which month saw the largest number of registrations. Does the answer help shed more light on Q2?
+
 **A3** 
 
 ```{r}
@@ -61,8 +65,13 @@ Take a look at the data, getting familiar with what it contains. Most of the col
 **A4** 
 
 ```{r}
+
 ```
 
 **Q5** What's an additional question you could ask of this data?
 
 **A5** 
+
+
+
+
