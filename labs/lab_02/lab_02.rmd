@@ -37,7 +37,7 @@ Take a look at the data, getting familiar with what it contains. Most of the col
 
 **Q1** How many voters appear to be *new* registrants since July 21, when President Joe Biden announced he would leave the race, based on the information above? Create a dataframe to hold the only those voters. Which counties have seen the most? Take a look at county population figures here and compare the two in your answer: https://worldpopulationreview.com/us-counties/maryland.
 
-**A1** 
+**A1** The total amount of voters that are seen to be new since July 21 is 17,099. In regards to which counties have seen the largest increase in new voters, they are: Montgomery County with 4847, Baltimore City with 2799, Baltimore County with 1683, Prince George's County with 1669, and Anne Arundel with 1320. Compared to the county population figures in these counties -- and Baltimore City -- (according to the website provided) it appears that the top five counties in my data correlate to the same top five counties (population wise) in the website. These high numbers are on account of the larger population density in these counties. 
 
 ```{r}
 #head(md_voters_2024)
@@ -49,7 +49,7 @@ md_voters_2024 |>
   select(STATE_REGISTRATION_DATE, COUNTY_REGISTRATION_DATE, COUNTY) |>
   mutate(new_registrants = STATE_REGISTRATION_DATE == COUNTY_REGISTRATION_DATE) |>
   filter(new_registrants) |>
-  filter(COUNTY_REGISTRATION_DATE >= 2024-07-21) |>
+  filter(COUNTY_REGISTRATION_DATE >= "2024-07-21") |>
   group_by(COUNTY) |>
   summarize(
     most_new = sum(new_registrants)
@@ -59,31 +59,86 @@ md_voters_2024 |>
 
 **Q2** A better question is whether the new voters you found in Q1 are an outlier compared to other weeks this year. Using the original dataframe with 2024 registrants, use `mutate()` and lubridate to produce week numbers from the COUNTY_REGISTRATION_DATE (Lubridate has a function that turns a date into a week number. Use that to answer this question). Save that to the original dataframe. Then calculate how many voters are in each week. Describe the distribution of voters groups in a sentence - are the weeks from July 21-August 7 different from the rest, and if so, how?
 
-**A2**
+**A2** The voter distribution each week seems to steadily increase in numbers (bar a few week exceptions) as the year goes on, with the largest increase in voter registration skyrocketing in the ending weeks of July and beginning weeks of August (July 21 - August 7). 
 
 ```{r}
+
+md_voters_2024 |> 
+  mutate(col_weeks = week(COUNTY_REGISTRATION_DATE)) |>
+  filter(STATE_REGISTRATION_DATE == COUNTY_REGISTRATION_DATE) |>
+  group_by(col_weeks) |>
+  summarize(
+    total = n()
+    ) |>
+  arrange(col_weeks)
 
 ```
 
 **Q3** Using lubridate, show which month saw the largest number of registrations. Does the answer help shed more light on Q2?
 
-**A3** 
+**A3** The month of July saw the largest number of registrations. This answer does shed more light on question two as it proves that the largest shift in new voter registration across Maryland occurred at the end of July, beginning of August, when former President Joe Biden dropped out of the election. This is true both in regard to all voter registration, and new voter registration. 
 
 ```{r}
+
+md_voters_2024 |> 
+  mutate(col_month = month(COUNTY_REGISTRATION_DATE)) |>
+  #filter(STATE_REGISTRATION_DATE == COUNTY_REGISTRATION_DATE) |> #(answer includes without this filter, AND with this filter)#
+  group_by(col_month) |>
+  summarize(
+    total = n()
+    ) |>
+  arrange(col_month)
 
 ```
 
 **Q4** Maryland has, officially, five regions: https://www.visitmaryland.org/article/maryland-regions. Modify the original dataframe again to add a `region` column based on the `COUNTY` value using case_when. Are you going to have to do this for every Maryland county plus Baltimore City? Yes, you are. Which regions and parties account for the most new voters?
 
-**A4** 
+**A4** The regions with the most new voters are Capital Region and Central Maryland. The parties that account for the largest number of new voters, in all of these counties, are the Democratic, Republican, and Unaffiliated parties. This is true both for all new registrations as well as all new registrations from July 21st onward. 
+
 
 ```{r}
+
+md_voters_2024 |>
+  mutate(region = case_when(
+        COUNTY == "Allegany" ~ "Western Maryland",
+        COUNTY == "Anne Arundel" ~ "Central Maryland",
+        COUNTY == "Baltimore City" ~ "Central Maryland",
+        COUNTY == "Baltimore County" ~ "Central Maryland",
+        COUNTY == "Calvert" ~ "Southern Maryland",
+        COUNTY == "Caroline" ~ "Eastern Shore Maryland",
+        COUNTY == "Carroll" ~ "Central Maryland",
+        COUNTY == "Cecil" ~ "Eastern Shore Maryland",
+        COUNTY == "Charles" ~ "Southern Maryland",
+        COUNTY == "Dorchester" ~ "Eastern Shore Maryland",
+        COUNTY == "Frederick" ~ "Capital Region",
+        COUNTY == "Garrett" ~ "Western Maryland",
+        COUNTY == "Harford" ~ "Central Maryland",
+        COUNTY == "Howard" ~ "Central Maryland",
+        COUNTY == "Kent" ~ "Eastern Shore Maryland",
+        COUNTY == "Montgomery" ~ "Capital Region",
+        COUNTY == "Prince George's" ~ "Capital Region",
+        COUNTY == "Queen Anne's" ~ "Eastern Shore Maryland",
+        COUNTY == "Saint Mary's" ~ "Southern Maryland",
+        COUNTY == "Somerset" ~ "Eastern Shore Maryland",
+        COUNTY == "Talbot" ~ "Eastern Shore Maryland",
+        COUNTY == "Washington" ~ "Western Maryland",
+        COUNTY == "Wicomico" ~ "Eastern Shore Maryland",
+        COUNTY == "Worcester" ~ "Eastern Shore Maryland"
+      )) |>
+  
+  #filter(COUNTY_REGISTRATION_DATE >= "2024-07-21") |> #(answer includes without this filter, AND with this filter)#
+  filter(STATE_REGISTRATION_DATE == COUNTY_REGISTRATION_DATE) |>
+  group_by(region, PARTY) |>
+  summarize(
+    total = n()
+    ) |>
+  arrange(region)
 
 ```
 
 **Q5** What's an additional question you could ask of this data?
 
-**A5** 
+**A5** An additional question that could be asked of this data is how many of the newly registered voters (both throughout the year, and after July 21st) were either male or female. This information could help provide a more accurate analysis of the election information (and for future polling data etc.).
 
 
 
