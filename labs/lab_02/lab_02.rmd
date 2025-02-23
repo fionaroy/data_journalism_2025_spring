@@ -37,7 +37,7 @@ Take a look at the data, getting familiar with what it contains. Most of the col
 
 **Q1** How many voters appear to be *new* registrants since July 21, when President Joe Biden announced he would leave the race, based on the information above? Create a dataframe to hold the only those voters. Which counties have seen the most? Take a look at county population figures here and compare the two in your answer: https://worldpopulationreview.com/us-counties/maryland.
 
-**A1** The total amount of voters that are seen to be new since July 21 is 17,099. In regards to which counties have seen the largest increase in new voters, they are: Montgomery County with 4847, Baltimore City with 2799, Baltimore County with 1683, Prince George's County with 1669, and Anne Arundel with 1320. Compared to the county population figures in these counties -- and Baltimore City -- (according to the website provided) it appears that the top five counties in my data correlate to the same top five counties (population wise) in the website. These high numbers are on account of the larger population density in these counties. 
+**A1** The total amount of voters that are seen to be new since July 21 is 17,099. In regards to which counties have seen the largest increase in new voters, they are: Montgomery County with 4847, Baltimore City with 2799, Baltimore County with 1683, Prince George's County with 1669, and Anne Arundel with 1320. Compared to the county population figures in these counties (according to the website provided) it appears that the top five counties in my data correlate to the same top five counties (population wise) in the website. These high numbers are on account of the larger population density in these counties. 
 
 ```{r}
 #head(md_voters_2024)
