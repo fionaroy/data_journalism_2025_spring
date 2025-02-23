@@ -62,6 +62,7 @@ md_voters_2024 |>
 **A2** The voter distribution each week seems to steadily increase in numbers (bar a few week exceptions) as the year goes on, with the largest increase in voter registration skyrocketing in the ending weeks of July and beginning weeks of August (July 21 - August 7). 
 
 ```{r}
+#not sure about this one, but I tried a bunch of things and this seems to work, worked from textbook#
 
 md_voters_2024 |> 
   mutate(col_weeks = week(COUNTY_REGISTRATION_DATE)) |>
