@@ -861,21 +861,21 @@ cleaned_md_grants_loans |>
 #why, it's downtown Baltimore, including the Inner Harbor area#
 
 
+#%n% !!! a shortcut for case when long lists
 
+```{r}
+md_voters_2024 |>
+  mutate(
+    region = case_when(
+    COUNTY %n% c("Montgomery", "Prince George's", etc) ~ "Capital Region",
+    COUNTY...
+    TRUE ~ region
+    )
+  ) |>
+  select(COUNTY, region) |>
+  etc.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 
 

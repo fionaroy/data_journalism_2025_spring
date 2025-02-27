@@ -1,0 +1,119 @@
+---
+title: "lab_03"
+author: "Derek Willis"
+date: "2024-08-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries and establish settings
+
+```{r}
+# Turn off scientific notation
+options(scipen=999)
+
+# Load the tidyverse
+library(tidyverse)
+
+# Load janitor
+library(janitor)
+```
+
+## Load data
+
+```{r}
+# Load MD slice of FEC House candidate contribution data
+md_contribs <- read_rds("data/lab_03.rds")
+```
+
+## Fix header issues
+
+You'll need to fix one issue with the column names using janitor. Write a code block to do that, making sure that you save the results to the same dataframe.
+
+```{r}
+#one header is in all capitals and has a space#
+
+md_contribs <- md_contribs |>
+  clean_names() 
+  
+#contribution_recipt_date is <chr> not a <date>#
+#report_year and fec_election_year is <dbl> not a <date>#
+
+```
+
+
+## Answer questions
+
+Q1: Which seven cities in Maryland had the largest *number* of contributions from donors? How many did each have? To answer this question, you'll have to clean the messy "contributor_city" field.
+
+Note: To answer this question, you'll need to see every variation of the "contributor_city" for the top seven cities, which you should identify through some initial analysis. Then find variations of them and change those variations into the most common version.
+
+A1: The seven cities in Maryland that had the largest number of contributions from donars are Bethesda (1177), Chevy Chase (704), Baltimore (692), Annapolis (492), Potomac (491), Silver Spring (408), and Rockville (358). 
+
+```{r}
+
+md_contribs |>
+  mutate(contributor_city = case_when(
+  contributor_city == "BALRIMORE" ~ "BALTIMORE",
+  contributor_city == "BLATIMORE" ~ "BALTIMORE",
+  contributor_city == "ANAPOLIS" ~ "ANNAPOLIS",
+  contributor_city == "POTAMIC" ~ "POTOMAC",
+  contributor_city == "SILVER SPRINGS" ~ "SILVER SPRING",
+  TRUE ~ contributor_city
+)) |>
+  group_by(contributor_city) |>
+  summarise(
+    count_city = n()
+  ) |>
+  arrange(desc(count_city))
+
+```
+
+Q2: Find the 5-digit ZIP code in Maryland that had the highest total amount of contributions (by dollar value). You will need to use mutate to ensure that you have a zip code column with the first five characters from the existing zip code column.
+
+Where is that zip code and what kind of area is it, demographically? Which committee is the largest recipient of money from that zip code? How many of the top five recipients are Maryland candidates?
+
+A2: The top zip code is 20817, Bethesda, MD, with $731,489.80. Demographically, this is the richest part of Maryland. The committee that is the largest recipient of money from that zip code is SHEILA CHERFILUS MCCORMICK FOR CONGRESS, INC. The amount of the top five recipients that are Maryland candidates are zero.
+
+```{r}
+
+md_contribs |>
+  mutate(contributor_zip = str_sub(contributor_zip, start=1L, end=5L)) |>
+  group_by(contributor_zip) |>
+  summarize(
+    top_zip_donations = sum(contribution_receipt_amount)
+  ) |>
+  arrange(desc(top_zip_donations))
+
+md_contribs |>
+  filter(contributor_zip == "20817") |>
+  group_by(committee_name) |>
+  summarize(
+    top_contenders = sum(contribution_receipt_amount)
+  ) |>
+  arrange(desc(top_contenders))
+
+
+```
+
+
+Q3: Let's look at top individual donors. Write code to generate a list of top donors using name and city, adding up the total amount of contributions. What does the original data say about the top two donors - who are they and what do they do? Do you see anything in the list of top 10 donors that would make you uncertain about the accuracy of these results?
+
+A3: The top two donators are Melanie Jacobsen, a farmer, and Daniel Kracov, an attorney. In the list of top 10 donors, what would make me uncertain about th eaccuracy of these results is the fact that three of the individual contributors are explicitly listed as 'not employed'. This is becuase this makes me cautious as to how they have donated so much money with no direct income. 
+
+```{r}
+
+md_contribs |>
+  group_by(contributor_name, contributor_city, contributor_occupation) |>
+  summarise(
+    total_contribs = sum(contribution_receipt_amount)
+  ) |>
+  arrange(desc(total_contribs))
+
+```
+
+
+
