@@ -1044,7 +1044,7 @@ maryland_zcta <- maryland_zcta |> mutate(across(ZCTA5N, as.character))
 Joining datasets allows you to expand the range and sophistication of questions you’re able to ask. It is one of the most powerful tools in a journalist’s toolkit.#
 
 
-
+Chapter 21: open refine
 
 
 
