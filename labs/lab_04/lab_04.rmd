@@ -46,6 +46,12 @@ You'll need to load one data set, a CSV file of campaign expenditures located in
 ```{r}
 # Load the Maryland expenditures data table
 
+# Load data
+md_senate_expenses <- read_csv("data/md_senate_expenses.csv")
+
+# Display it
+md_senate_expenses
+
 ```
 
 ## Answer questions
@@ -88,3 +94,6 @@ Then, using that `purpose_clean` column, write code to find the largest amounts 
 **Q5** What's the most interesting story idea you've found in this data?
 
 **A5**
+
+
+
