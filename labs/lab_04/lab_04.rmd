@@ -49,8 +49,8 @@ You'll need to load one data set, a CSV file of campaign expenditures located in
 # Load data
 md_senate_expenses <- read_csv("data/md_senate_expenses.csv")
 
-# Display it
-md_senate_expenses
+# Display it; date column already listed as date
+glimpse(md_senate_expenses)
 
 ```
 
@@ -64,36 +64,116 @@ Then, when you are done standardizing `purpose_clean`, export it as a new CSV fi
 
 Then, using that `purpose_clean` column, write code to find the largest amounts of spending on categories by both campaigns.
 
-**A1.**
+**A1.** It appears that the largest amounts of spending on categories by both campaigns are in regard to advertising: Alsobrooks for media advertising (3639344.50), and Hogan for ADS (2178145.48).
 
 ```{r}
+# Load data
+clean_md_senate_expenses <- read_csv("data/cleaned-md-senate-expenses-csv.csv")
+
+# largest amounts of spending on categories in both campaigns --> purpose_clean
+
+clean_md_senate_expenses |>
+  group_by(purpose_clean, candidate) |>
+  summarize(
+    largest_amount= sum(amount)
+  ) |>
+  arrange(desc(largest_amount))
+
 
 ```
 
 **Q2.** Let's do some research on the top purposes from A1. Feel free to search the Web to understand those terms better if need be, and then write a description comparing and contrasting the two campaigns' largest categories of spending.
 
-**A2.**
+**A2.** Both candidates campaigns seem to focus the majority of their spending on advertising and staffing. Alsobrooks campaign seems to focus most on media advertising, salary for campaign members, and list aquisition (gathering lists of info of potential donors, fundraisers, vendors etc.). Hogan's campaign focuses most of his revenue on ADS (although he focuses more on physical, printed adverts compared to Alsobrooks who favors online/media ads) and staffing for his campaign. 
+
 
 **Q3.** Pick one of the top categories for each campaign and write code that shows how that spending has changed over time, if at all. You'll need to use lubridate for this. Write a couple of sentences describing that pattern.
 
-**A3.**
+**A3.** For Alsobrooks, when focusing on her top spending category -- Media Advertising -- it seems like each week she (pretty consistantly except for the week of 2024-03-17) steadily increases the amount of money she spends. For Hogan, when focusing on his top spending category -- ADS -- it appears that there is no steady incline or decline of his spending. Each week for Hogan is different, spending amounts differing each week drastically, like jumping from just under 3,000 one week to a little over 300,000 the next. 
 
 ```{r}
 
+# Alsobrooks focus on media ads
+clean_md_senate_expenses |>
+  mutate(week = floor_date(date, "week")) |>
+  filter(purpose_clean =="Media Advertising", candidate == "Alsobrooks") |>
+  group_by(week, candidate) |>
+  summarize(
+    spending_amount=sum(amount)
+  ) |>
+  arrange(week)
+
+# Hogan focus on ADS
+clean_md_senate_expenses |>
+  mutate(week = floor_date(date, "week")) |>
+  filter(purpose_clean =="ADS", candidate == "Hogan") |>
+  group_by(week, candidate) |>
+  summarize(
+    spending_amount=sum(amount)
+  ) |>
+  arrange(week)
+
 
 ```
+
 
 **Q4.** Which committee has the larger payroll or salary spending so far? How many unique recipients of payroll/staff spending are there for each candidate?
 
-**A4.**
+**A4.** The committee that has the larger payroll/salary spending so far is Hogan's campaign, although Alsobrooks has the more individual unique recipients (Hogan = total spending of 481109.5; one unique recipient)(Alsobrooks = total spending of 268885.30 for salary [369376.50 if including payroll tax and fees]; 22 unique salary recipients [24 if including payroll tax and fees]).
 
 ```{r}
 
+# Alsobrooks; used ChatGPT for filter advice on this one
+clean_md_senate_expenses |>
+  filter(purpose_clean == c("Payroll Fee","Payroll Taxes", "Salary"), candidate == "Alsobrooks") |>
+  group_by(purpose_clean, candidate) |>
+  summarize(
+    total_spending = sum(amount),
+    unique_recipients = n_distinct(first_name, last_name)
+  ) |>
+  arrange(desc(total_spending))
+
+#Hogan; unsure about this one due to his confusing staffing records, this is all I could think of to include
+clean_md_senate_expenses |>
+  filter(purpose_clean == "STAFFING", candidate == "Hogan") |>
+  group_by(purpose_clean, candidate) |>
+  summarize(
+    total_spending = sum(amount),
+    unique_recipients = n_distinct(first_name, last_name, organization_name)
+  ) |>
+  arrange(desc(total_spending))
+
 ```
+
+```{r}
+
+#this is the Q4 answer with the additional filters jic
+# Alsobrooks; used ChatGPT for filter advice on this one
+clean_md_senate_expenses |>
+  filter(purpose_clean == c("Payroll Fee","Payroll Taxes", "Salary", "Stipend", "Travel Stipend", "Research Consulting", "Legal Consulting", "Digital Consulting", "Compliance Consulting", "Fundraising Consulting", "Communication Consulting", "STRATEGY CONSULTING", "Campaign Management Consulting", "General Strategy Consulting"), candidate == "Alsobrooks") |>
+  group_by(purpose_clean, candidate) |>
+  summarize(
+    total_spending = sum(amount),
+    unique_recipients = n_distinct(first_name, last_name)
+  ) |>
+  arrange(desc(total_spending))
+
+#Hogan; unsure about this one due to his confusing staffing records, this is all I could think of to include
+clean_md_senate_expenses |>
+  filter(purpose_clean == c("STAFFING", "STRATEGY CONSULTING", "Travel Stipend", "CONTRACTOR FIELD STAFF"), candidate == "Hogan") |>
+  group_by(purpose_clean, candidate) |>
+  summarize(
+    total_spending = sum(amount),
+    unique_recipients = n_distinct(first_name, last_name, organization_name)
+  ) |>
+  arrange(desc(total_spending))
+
+```
+
 
 **Q5** What's the most interesting story idea you've found in this data?
 
-**A5**
+**A5** One interesting story idea that I've found in this data is the drastic jumping/differences in Hogans top spending category, ADS, and how the numbers are so widely different each week. I want to know why this is, what specifically were his motivations for the difference in spending each week etc. as in comparison, Alsobrooks followed a pretty steady increase in spending on her preferred method of advert use. 
 
 
 
