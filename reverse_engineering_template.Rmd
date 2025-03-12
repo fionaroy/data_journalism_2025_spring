@@ -1,7 +1,7 @@
 ---
 title: "Reverse Engineering Project"
-author: "Fiona Roy"
-date: "2025-03-12"
+author: "Student names here"
+date: "Date here"
 output:
   html_document:
     theme: cerulean
@@ -18,19 +18,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction 
 
-In this notebook, we are reverse engineering the story, [CEOs gave heavily during legislative session, exposing loophole in NC's fundraising ban](https://www.wral.com/in-session-campaign-donations/17716104/)
+In this notebook, we are reverse engineering the story, [STORY NAME](STORY URL)
 
 ## Load libraries
 
 Loading required libraries for this analysis.
 
 ```{r echo=FALSE, message=FALSE}
-
-# turn off sci notation
-options(scipen=999)
-library(tidyverse)
-library(lubridate)
-library(refinr)
 
 ```
 
@@ -40,7 +34,6 @@ In this section, describe the source of the data, write a basic data dictionary 
 
 ```{r}
 # Load required data
-donors <- read_csv("https://github.com/wraldata/session-ban-data/raw/master/donors0103-0701.csv")
 
 # Path to data should be loaded from folder "data" i.e. read_csv("data/name_of_data.csv")
 
