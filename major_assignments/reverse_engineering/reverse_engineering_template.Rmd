@@ -31,6 +31,8 @@ options(scipen=999)
 library(tidyverse)
 library(lubridate)
 library(refinr)
+library(janitor)
+library(dplyr)
 
 ```
 
@@ -40,25 +42,85 @@ In this section, describe the source of the data, write a basic data dictionary 
 
 ```{r}
 # Load required data
-donors <- read_csv("https://github.com/wraldata/session-ban-data/raw/master/donors0103-0701.csv")
-
 # Path to data should be loaded from folder "data" i.e. read_csv("data/name_of_data.csv")
+donors <- read_csv("data/donors0103-0701.csv")
 
+```
+
+
+```{r}
+
+donors <- donors |>
+  mutate(
+    amount = str_remove_all(amount, "\\$"),
+    amount = str_remove_all(amount, ",")
+  )
+
+glimpse(donors)
+
+```
+
+
+```{r}
 # Clean required data and prepare for analysis if needed. 
+
+donors <- donors |>
+  mutate(date=mdy(date)) |>
+  mutate(amount = as.numeric(amount)) |>
+  mutate(committee_zip = str_sub(committee_zip, start=1L, end=5L)) |>
+  mutate(zip = str_sub(zip, start=1L, end=5L))
+
+glimpse(donors)
 
 
 ```
+
 
 ## Sentences to Engineer
 In this notebook, we are reverse engineering five sentences from the story.
 
 ### Sentence 1
 
-* **Sentence text**: [Paste in sentence to engineer here]
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Sentence text**: "Add in the week before session began, and the two businessmen gave more than $87,000 to Republican legislators and the North Carolina Republican Party, a key cog in the campaign machine this year as the two major parties fight for control of the General Assembly in November's elections."
+
+* **Analysis summary**: The results of our analysis for this first sentence is that we were able to produce findings to support the claim that George Strobel and Robin Delmer gave more than 87,000 dollars throughout the North Carolina General Assembly. This then proves, at the very least, that the groundwork of data analysis for this article is off to a correct start (making the rest of the analysis, already, seem most likely to be true) in regard to its eventual, more specified, analysis of donations being given during session.
 
 ```{r}
+
+donors <- donors |>
+  rename(
+    name_clean = "name-clean"
+  )
+
+```
+
+
+```{r}
+
+donors |>
+  group_by(committee_name) |>
+  summarize(
+    amount = sum(amount)
+  ) |>
+  arrange(desc(amount))
+
+```
+
+
+```{r}
+#date range of first week before NC general assembly --> 2018-01-03 to 2018-01-09##
+#NC general assembly 2018 ran from 2018-01-10 to the 2018-07-04##
+#looking for the two business men who gave more than 87,000 dollars to Republican party##
 # Put code to reverse engineer sentence here
+      
+donors |>
+  filter(clean_name == "GEORGE LEWIS STROBEL II" | clean_name == "ROBIN E DELMER") |>
+  group_by(clean_name) |>
+  summarise(amount = sum(amount)) |>
+  arrange(desc(amount))
+  
+  
+#name-clean, amount, date, committee_name, profession, employer_name, transaction_type#
 
 # Display results of code below this codeblock
 
@@ -66,7 +128,8 @@ In this notebook, we are reverse engineering five sentences from the story.
 
 ### Sentence 2
 
-* **Sentence text**: [Paste in sentence to engineer here]
+* **Sentence text**: "This year's legislative session also saw significant donations from hog farmers and beer distributors, both industries with important legislation before the General Assembly. Senate President Pro Tem Phil Berger's campaign alone raised nearly $222,000 during session. Twenty-three people gave him the maximum allowed: $5,200."
+
 * **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
 
 ```{r}
@@ -78,7 +141,8 @@ In this notebook, we are reverse engineering five sentences from the story.
 
 ### Sentence 3
 
-* **Sentence text**: [Paste in sentence to engineer here]
+* **Sentence text**: "All told during the six-week General Assembly session, more than $1.1 million flowed into state legislators' campaign accounts. That's a conservative figure, reached by backing out money that simply flowed from one politician's campaign to another and money elected officials put into their own campaigns."
+
 * **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
 
 ```{r}
@@ -90,7 +154,8 @@ In this notebook, we are reverse engineering five sentences from the story.
 
 ### Sentence 4
 
-* **Sentence text**: [Paste in sentence to engineer here]
+* **Sentence text**: "Add in donations to the two main political parties and to a handful of other large fundraising vehicles for state legislative races, and the in-session giving topped $3.4 million. Gov. Roy Cooper's main campaign account brought in another $407,000 during session."
+
 * **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
 
 ```{r}
@@ -102,7 +167,8 @@ In this notebook, we are reverse engineering five sentences from the story.
 
 ### Sentence 5
 
-* **Sentence text**: [Paste in sentence to engineer here]
+* **Sentence text**: "A WRAL News analysis of campaign finance filings also turned up $16,000 in donations to legislative campaigns during session from 15 PACs with a lobbyist. Each would appear to be a violation of state fundraising rules, but spokespeople for most of the PACs, or the companies they represent, said there was a simple explanation: The checks were written before session."
+
 * **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
 
 ```{r}
