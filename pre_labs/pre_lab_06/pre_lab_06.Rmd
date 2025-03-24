@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 1.  Review of fifth lab questions/problems.
 2.  Demonstration of PDF parsing with Tabula
 
+
 ### Task 1: Load libraries
 
 **Task** Run the following code in the gray-colored codeblock below -- not in the console -- to load the tidyverse library. To run the code, click the little green play button (left facing arrow) at the top right of the codeblock. In Rmarkdown data notebooks, we write code inside of codeblocks, and explanatory text in the white area outside of it.
@@ -38,7 +39,7 @@ When Tabula opens, you click browse to find the PDF on your computer somewhere, 
 knitr::include_graphics(rep("images/md_voters.png"))
 ```
 
-ow you can hit the green "Preview & Export Extracted Data" button on the top right. You should see something very like this:
+now you can hit the green "Preview & Export Extracted Data" button on the top right. You should see something very like this:
 
 ```{r, echo=FALSE}
 knitr::include_graphics(rep("images/md_voters2.png"))
@@ -97,7 +98,10 @@ You can now export that extracted table to a CSV file using the "Export" button.
 
 ### Task 5: Export the CSV file
 
-**Task** Export the CSV file to your pre_lab_06 folder and read it into R by running the following codeblock. What problems do you see with the data? **Answer**
+**Task** Export the CSV file to your pre_lab_06 folder and read it into R by running the following codeblock. What problems do you see with the data? 
+
+**Answer** The problems with this data are that there is no header row, a lot of the rows are riddled with N/As (which is the lack of data, whether by organizational method or general input), and office names are intertwined with candidate names making everything muddled. 
+
 
 ```{r}
 benzie_2024 <- read_csv("tabula-Benzie Aug 6,2024 Official Precinct Results.csv")
@@ -113,7 +117,10 @@ Then we've got rows with NAs, plus office names mixed up with candidate names. L
 
 ### Task 6: Cleaning up & getting rid of rows we don't need
 
-**Task** Get rid of rows we don't need by running the codeblock below. What problems remain? **Answer**
+**Task** Get rid of rows we don't need by running the codeblock below. What problems remain? 
+
+**Answer** The problems that remain are that the header-titles are still very confusing and/or non-existent, and the candidate column and party information is still combined which makes the data hard to parse through. 
+
 
 ```{r}
 benzie_2024 <- read_csv("tabula-Benzie Aug 6,2024 Official Precinct Results.csv", col_names = FALSE)
@@ -129,7 +136,9 @@ Ok, now we have numbers and candidates, but we still need better headers and a w
 
 ### Task 7: Making a party column, changing headers and adding an office column.
 
-**Task** Run the codeblock below. What changed, and what issues or problems remain? **Answer**
+**Task** Run the codeblock below. What changed, and what issues or problems remain? 
+
+**Answer** What changed is that there is now three distinct columns that seperate the info of candidate name, party affiliation, and the office in which they are associated with. Additionally, there are some specific titles for which numbers/info come from which precinct, but a lot of the columns are still missing proper headings/titles for which the info can be easily understood by. Additionally, there are still some N/As in there on account of missing information.
 
 ```{r}
 benzie_2024 <- benzie_2024 |>
@@ -144,8 +153,12 @@ benzie_2024 <- benzie_2024 |>
 
 benzie_2024
 ```
+
+
 If we wanted to finish the job, the rest is pretty similar, and then we'd make a single row for each precinct.
 
 All things considered, that was pretty easy. But take a look at the second page of results, and you'll see more issues. Many - most? - electronic PDFs aren't so easy to parse. Sometimes you'll need to open the exported CSV file and clean things up before importing into R. Other times you'll be able to do that cleaning in R itself.
 
 Here's the sad truth: THIS IS PRETTY GOOD. It sure beats typing it out. And since many government processes don't change all that much, you can save the code to process subsequent versions of PDFs.
+
+
