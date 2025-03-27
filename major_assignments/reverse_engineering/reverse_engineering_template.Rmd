@@ -114,41 +114,78 @@ donors |>
 # Put code to reverse engineer sentence here
       
 donors |>
-  filter(clean_name == "GEORGE LEWIS STROBEL II" | clean_name == "ROBIN E DELMER") |>
-  group_by(clean_name) |>
+  filter(name_clean == "GEORGE LEWIS STROBEL II" | name_clean == "ROBIN E DELMER") |>
+  group_by(name_clean) |>
   summarise(amount = sum(amount)) |>
   arrange(desc(amount))
   
   
 #name-clean, amount, date, committee_name, profession, employer_name, transaction_type#
-
 # Display results of code below this codeblock
+
+donors %>%
+  filter(name_clean == "GEORGE LEWIS STROBEL II" | name_clean == "ROBIN E DELMER") %>%
+  group_by(committee_name) %>%
+  summarise(amount = sum(amount)) %>%
+  arrange(desc(amount))
+#rabon = dem
+#michael lee = repub = 12500
+#saine = repub = 12500
+#hise = repub = 12500
+#jackson = repub = 10000
+#moore = repub = 10000
+#brown = repub = 10000
+#berger = repub = 10000
+#nc rec = real estate commission = 6000
+#randleman = repub = 5000
+#szoka = repub = 4000
+#brawley = repub = 2500
+#lewis = repub = 2500 (later got in legal trouble for corruption lmao)
+#tillman = repub = 2500
+#bell = repub = 2500
+#burr = repub = 1000
+
+12500+12500+12500+10000+10000+10000+10000+5000+4000+2500+2500+2500+2500+1000 = 97500
 
 ```
 
 ### Sentence 2
 
-* **Sentence text**: "This year's legislative session also saw significant donations from hog farmers and beer distributors, both industries with important legislation before the General Assembly. Senate President Pro Tem Phil Berger's campaign alone raised nearly $222,000 during session. Twenty-three people gave him the maximum allowed: $5,200."
+* **Sentence text**: "Senate President Pro Tem Phil Berger's campaign alone raised nearly $222,000 during session. Twenty-three people gave him the maximum allowed: $5,200."
 
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Analysis summary**: We were able to confirm the finding when we filtered for Berger's campaign, the date's of the short session and the amount given (5,200) we got 23 rows. This number thus proves the sentence above that states 23 individual donators (either PACs or individual people) donated the max amount allowed, equaling $222,000.
 
 ```{r}
 # Put code to reverse engineer sentence here
-
 # Display results of code below this codeblock
+#date range of first week before NC general assembly --> 2018-01-03 to 2018-01-09##
+##legislative short session for NC general assembly may 16-june 29##
+#NC general assembly 2018 ran from 2018-01-10 to the 2018-07-04##
+
+berger <- donors |>
+  filter(date >= '2018-05-16' & date <= '2018-06-29') |>
+  filter(committee_name == "PHILIP E BERGER COMM") |>
+  filter(amount == 5200) |>
+  group_by(name_clean, date, amount) |>
+  summarize(sum(amount))
+
+
 
 ```
 
 ### Sentence 3
 
-* **Sentence text**: "All told during the six-week General Assembly session, more than $1.1 million flowed into state legislators' campaign accounts. That's a conservative figure, reached by backing out money that simply flowed from one politician's campaign to another and money elected officials put into their own campaigns."
+* **Sentence text**: "Beer distributors also gave during session. Mark Craig, the president of distributor R.H. Barringer, put more than $30,000 into state legislative campaigns during the six-week period, including the maximum $5,200 to Berger. He was the top individual donor to legislative campaigns during session."
 
 * **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
 
 ```{r}
 # Put code to reverse engineer sentence here
-
 # Display results of code below this codeblock
+
+donors |>
+  
+
 
 ```
 
@@ -160,8 +197,9 @@ donors |>
 
 ```{r}
 # Put code to reverse engineer sentence here
-
 # Display results of code below this codeblock
+
+
 
 ```
 
@@ -173,9 +211,15 @@ donors |>
 
 ```{r}
 # Put code to reverse engineer sentence here
-
 # Display results of code below this codeblock
+
+
+
 
 ```
 
 -30-
+
+
+
+
