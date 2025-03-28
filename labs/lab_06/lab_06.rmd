@@ -115,33 +115,151 @@ current_registrations_2022 <- read_csv("currentregistrations_tabula-2022_09.csv"
 
 Q1. Calculate the percentage of registered Democrats, Republicans and unaffiliated voters for the entire state in September 2024 and September 2022, and then calculate the percentage change for those three party categories (the formula for percentage change is easy to remember: (New-Old)/Old). How would you describe the changes in these partisan categories in a story? What's the most interesting thing about these changes that would be the lede of that story?
 
-A1. 
+A1. Here are the percentage changes in partisan categories DEM, REP, and UNAF: DEM (2022 = 54.09%; 2024 = 52.45%); REP (2022 = 24.00%; 2024 = 23.85%); UNAF (2022 = 20.22%; 2024 = 21.84%). The way that I would describe these changes in a story is this: Between the span of two years from 2022 to 2024, the Maryland partisan registered voter composition has seen an overall increase in the number of registered voters, but a decrease in the amount of registered Democrats in comparison to other party affiliations. The most interesting thing about these changes that could be the lede of a story is that Maryland is a notoriously Democratic leaning state, and the fact that there was a decrease in registered Democrats, but an increase in not only Republican voters but ALSO Unaffiliated voters would be a great lede. (especially when one considers the rise in conservative legislation and movements across the country and how that plans into the new registration data...) 
 
-###get rid of or filter out some of the total row/column so it doesnt get confused###
-###DO THIS FOR ALL THREE PARTIES###
+```{r}
+#percentage of registered voters for entire state '22 and '24##
+
+current_registrations_2022 |>
+  filter(COUNTY == "TOTAL") |>
+  group_by(COUNTY) |>
+  summarise (
+    perc_dem_total = (DEM/TOTAL_X*100)
+  )
+
+#2022 = DEM: 54.09%#
+
+current_registrations_2022 |>
+  filter(COUNTY == "TOTAL") |>
+  group_by(COUNTY) |>
+  summarise (
+    perc_rep_total = (REP/TOTAL_X*100)
+  )
+
+#2022 = REP: 24.00%#
+
+current_registrations_2022 |>
+  filter(COUNTY == "TOTAL") |>
+  group_by(COUNTY) |>
+  summarise (
+    perc_unaf_total = (UNAF/TOTAL_X*100)
+  )
+
+#2022 = UNAF: 20.22%#
+
+current_registrations_2024 |>
+  filter(COUNTY == "TOTAL") |>
+  group_by(COUNTY) |>
+  summarise (
+    perc_dem_total = (DEM/TOTAL_X*100)
+  )
+
+#2024 = DEM: 52.45%#
+
+current_registrations_2024 |>
+  filter(COUNTY == "TOTAL") |>
+  group_by(COUNTY) |>
+  summarise (
+    perc_rep_total = (REP/TOTAL_X*100)
+  )
+
+#2024 = REP: 28.85%#
+
+current_registrations_2024 |>
+  filter(COUNTY == "TOTAL") |>
+  group_by(COUNTY) |>
+  summarise (
+    perc_unaf_total = (UNAF/TOTAL_X*100)
+  )
+
+#2024 = UNAF: 21.84%#
+
+```
+
 
 ```{r}
 
 pre_join_24 <- current_registrations_2024 |>
-  mutate(perc_dem_2024 = DEM/TOTAL*100) |>
+  mutate(perc_dem_2024 = DEM/TOTAL_X*100) |>
   select(COUNTY, perc_dem_2024)
 
 pre_join_22 <- current_registrations_2022 |>
-  mutate(perc_dem_2022 = DEM/TOTAL*100) |>
+  mutate(perc_dem_2022 = DEM/TOTAL_X*100) |>
   select(COUNTY, perc_dem_2022)
 
 pre_join_24 |>
-  inner_join(pre_join_22)
+  inner_join(pre_join_22) |>
+  filter(COUNTY == "TOTAL")
+
+##if want not just the total state percent change, can edit out from pre_join_24 data set from |> filter... onward; with the filter it just shows the total percent difference of all registered MD dem's otu of total reigstered voters#
+
+```
+
+```{r}
+
+pre_join_24 <- current_registrations_2024 |>
+  mutate(perc_rep_2024 = REP/TOTAL_X*100) |>
+  select(COUNTY, perc_rep_2024)
+
+pre_join_22 <- current_registrations_2022 |>
+  mutate(perc_rep_2022 = REP/TOTAL_X*100) |>
+  select(COUNTY, perc_rep_2022)
+
+pre_join_24 |>
+  inner_join(pre_join_22) |>
+  filter(COUNTY == "TOTAL")
+
+```
+
+```{r}
+
+pre_join_24 <- current_registrations_2024 |>
+  mutate(perc_unaf_2024 = UNAF/TOTAL_X*100) |>
+  select(COUNTY, perc_unaf_2024)
+
+pre_join_22 <- current_registrations_2022 |>
+  mutate(perc_unaf_2022 = UNAF/TOTAL_X*100) |>
+  select(COUNTY, perc_unaf_2022)
+
+pre_join_24 |>
+  inner_join(pre_join_22) |>
+  filter(COUNTY == "TOTAL")
 
 ```
 
 Q2. Among the Maryland jurisdictions with the most registered voters, which one had the biggest percentage increase in unaffiliated voters between 2022 and 2024? How did that county vote for governor in 2022 and for president in 2020? Contrast the partisan percentages of that county with the county that had the eighth-largest percentage increase in unaffiliated voters. You should display information from the data that shows the counties with the largest percentage increase first.
 
-A2.
+A2. Among the Maryland jurisdictions with the most registered voters the top five are: Montgomery (688741), Prince George's (612741), Baltimore County (578375), Anne Arundel (415737), and Baltimore City (399811). However, the jurisdiction with the biggest percentage increase in unaffiliated voters between 2022 and 2024 is Anne Arundel County with a 1.43% increase (2022-2024 = 23.95% to now 25.38%). This county in 2020 voted DEM (i.e. Joe Biden) for president (55.8% of the county's vote), and in 2022 voted DEM (i.e. Wes Moore) for governor (approx. 57.57% of the county's vote).And, to compare the partisan percentages of Anne Arundel County with the county that had the eight-largest percentage increase in unaffiliated voters: Anne Arundel County with a 1.43% increase (2022-2024 = 23.95% to now 25.38%; % increase = 1.43%); and 8th largest = St. Mary's (2022-2024 = 22.40% to now 23.56%; % increase = 1.16%). So, this comparison shows that despite the increase in overall registered voters in MD as a whole, the county break up makes it so that the increase (or decrease) in specific party registration is rather close in numbers -- often only being larger by a few tenths or hundredths of a single percent.
 
 ```{r}
-
 ##still uses current registrants##
+
+current_registrations_2024 |>
+  group_by(TOTAL_X, COUNTY) |>
+  arrange(desc(TOTAL_X))
+
+##Maryland jurisdictions with the most registered voters: Montgomery (688741), Prince George's (612741), Baltimore County (578375), Anne Arundel (415737), Baltimore City (399811)##
+
+pre_join_24 <- current_registrations_2024 |>
+  mutate(perc_unaf_2024 = UNAF/TOTAL_X*100) |>
+  select(COUNTY, perc_unaf_2024)
+
+pre_join_22 <- current_registrations_2022 |>
+  mutate(perc_unaf_2022 = UNAF/TOTAL_X*100) |>
+  select(COUNTY, perc_unaf_2022)
+
+pre_join_24 |>
+  inner_join(pre_join_22) |>
+  arrange(desc(perc_unaf_2024))
+
+##county that had the eighth-largest percentage increase (from '22-'24) in UNAF voters: St. MARY'S ('24 = 23.56%; % increase = 1.16%)##
+
+pre_join_24 |>
+  inner_join(pre_join_22) |>
+  filter(COUNTY == "MONTGOMERY" | COUNTY == "PR. GEORGE'S" | COUNTY == "BALTIMORE CO." | COUNTY == "ANNE ARUNDEL" | COUNTY == "BALTIMORE CITY") |>
+  arrange(desc(perc_unaf_2024))
+
+##county out of top five jurisdictions with the largest number of current registered voters with the largest percent change in UNAF voters between '22 and '24 is ANNE ARUNDEL County with a 1.43% increase.##
 
 ```
 
@@ -149,28 +267,190 @@ Q3. Do the party percentages of new registrants (% Dem, % Rep, % Unaffiliated) f
 
 In other words, did new registrants mirror the overall partisan composition of the electorate, or were they different? Do any of the methods of registration vary significantly from the overall partisan pattern? Which method is worthy of further exploration?
 
-A3.
+A3. The party percentages of new registrants (% Dem, % Rep, % Unaffiliated) from September 2024 and September 2022 appear to not exactly match the party percentage breakdown of the current voter registrant data. It appears that the percentages are almost all off by approximately 1-3% (both for 2022 and 2024). This is because the new registrants data is only including the number of NEW voters, while the current registration data is including ALL voters (both old and new). And, while the numbers should be the same if the new registant data is what the percent change is calculating, the reason why it seems to be a few points off for each party affiliation is that the new registrant data seems to have an additional column from the original data set (that included all the information; i.e. the PDF) which detailed there appear to be duplicates of recorded data. Additionally, the new registration data is only counting the numbers of new registered voters in that year by HOW they REGISTERED to vote --> not just the total number of new voters. Thus, the data, on account of there being recorded duplicate information, would make sense to be slightly different from each other/slightly off. In terms of the variation between specific methods of registration, for each party affiliation, it appears to mostly follow the partisan pattern of MD (which is Democrat-centered). This is because most of the new registrants are Democrats, which does fit the MD trend
+vary significantly from the overall partisan pattern. Although what is interesting, and something I find unique about the new registration make up, is that for each party's registration methods, each one has different 'most popular/common' registrant method. I think this would be interesting to look into, like why do new MD dem registrants seem to have large amounts of absentee ballots, rep have more new in person registrants, and unaffiliated have more designated state agencies registrants? In terms of a method is worthy of further exploration, I would like to look more into why so many new registrants, across all three designations, seem to really prefer motor vehicle registrations. 
 
 ```{r}
-
 ##new registrants##
+
+before_join_24 <- new_party_registrations_2024 |>
+  mutate(perc_dem_2024 = DEM/TOTAL_X*100) |>
+  select(SUMMARY, perc_dem_2024)
+
+before_join_22 <- new_party_registrations_2022 |>
+  mutate(perc_dem_2022 = DEM/TOTAL_X*100) |>
+  select(SUMMARY, perc_dem_2022)
+
+before_join_24 |>
+  inner_join(before_join_22) |>
+  filter(SUMMARY == "TOTAL")
+
+```
+
+```{r}
+##new registrants##
+
+before_join_24 <- new_party_registrations_2024 |>
+  mutate(perc_rep_2024 = REP/TOTAL_X*100) |>
+  select(SUMMARY, perc_rep_2024)
+
+before_join_22 <- new_party_registrations_2022 |>
+  mutate(perc_rep_2022 = REP/TOTAL_X*100) |>
+  select(SUMMARY, perc_rep_2022)
+
+before_join_24 |>
+  inner_join(before_join_22) |>
+  filter(SUMMARY == "TOTAL")
+
+```
+
+```{r}
+##new registrants##
+
+before_join_24 <- new_party_registrations_2024 |>
+  mutate(perc_unaf_2024 = UNAF/TOTAL_X*100) |>
+  select(SUMMARY, perc_unaf_2024)
+
+before_join_22 <- new_party_registrations_2022 |>
+  mutate(perc_unaf_2022 = UNAF/TOTAL_X*100) |>
+  select(SUMMARY, perc_unaf_2022)
+
+before_join_24 |>
+  inner_join(before_join_22) |>
+  filter(SUMMARY == "TOTAL")
 
 ```
 
 Q4. Choose your own adventure! Using both the 2024 and 2022 data for one of the dataframes (changes, removals or new registrations), ask and answer a question that makes at least one comparison and requires code to answer. That could involve calculating a percentage, percentage change or the raw difference between two columns.
 
-A4.
+A4. I want to know what the most common removal of a registrant is between DEM's, REP's, and UNAF's, and what is the percent change between 2022 to 2024, or if there is a difference between parties.
+  ANWSER: The most common removal type across the state of Maryland is COUNTY TRANSFER OUT. The most common removal type for the three party designations are as follows: DEM (2022 = country transfer out; 2024 = county transfer out; % change = MAIL VERIFICATINO (NVRA), VOTER REQUEST AND MOVED OUT OF STATE); REP (2022 = county transfer out; 2024 = county transfer out; % change = CONFIRMATION BY MAIL, OTHER, and CRIMINAL CONVICTION); UNAF (2022 = county transfer out; 2024 = county transfer out; % change = CONFIRMATION MAIL, MAIL VERIFICATION (NVRA), AND CRIMINAL CONVICTION, DUPLICATE).There is a definite difference between parties as can be read above (not surprising).
 
 ```{r}
 
+removals_2022 |>
+  select(SUMMARY, TOTAL_X) |>
+  arrange(desc(TOTAL_X))
 
+##most common removal type is county transfer out across all boards/the whole state of MD##
 
 ```
 
+```{r}
+
+removals_2022 |>
+  group_by(SUMMARY, DEM) |>
+  summarise (
+    most_common = sum(DEM)
+  ) |>
+  arrange(desc(most_common))
+
+##2022: COUNTY TRANSFER OUT 9054
+
+removals_2024 |>
+  group_by(SUMMARY, DEM) |>
+  summarise (
+    most_common = sum(DEM)
+  ) |>
+  arrange(desc(most_common))
+
+##2024: COUNTY TRANSFER OUT 6769
+
+ahead_join_24 <- removals_2024 |>
+  mutate(perc_dem_2024 = DEM/TOTAL_X*100) |>
+  select(SUMMARY, perc_dem_2024)
+
+ahead_join_22 <- removals_2022 |>
+  mutate(perc_dem_2022 = DEM/TOTAL_X*100) |>
+  select(SUMMARY, perc_dem_2022)
+
+ahead_join_24 |>
+  inner_join(ahead_join_22) |>
+  mutate(perc_difference = perc_dem_2024/perc_dem_2022*100) |>
+  arrange(desc(perc_difference))
+
+##biggest percent difference DEM 2022 - 2024: MAIL VERIFICATION (NVRA), VOTER REQUEST AND MOVED OUT OF STATE
+
+```
+
+```{r}
+
+removals_2022 |>
+  group_by(SUMMARY, REP) |>
+  summarise (
+    most_common = sum(REP)
+  ) |>
+  arrange(desc(most_common))
+
+##2022: COUNTY TRANSFER OUT 2593
+
+removals_2024 |>
+  group_by(SUMMARY, REP) |>
+  summarise (
+    most_common = sum(REP)
+  ) |>
+  arrange(desc(most_common))
+
+##2024: COUNTY TRANSFER OUT 2043
+
+ahead_join_24 <- removals_2024 |>
+  mutate(perc_rep_2024 = REP/TOTAL_X*100) |>
+  select(SUMMARY, perc_rep_2024)
+
+ahead_join_22 <- removals_2022 |>
+  mutate(perc_rep_2022 = REP/TOTAL_X*100) |>
+  select(SUMMARY, perc_rep_2022)
+
+ahead_join_24 |>
+  inner_join(ahead_join_22) |>
+  mutate(perc_difference = perc_rep_2024/perc_rep_2022*100) |>
+  arrange(desc(perc_difference))
+
+##biggest percent difference REP 2022 - 2024: CONFIRMATION BY MAIL, OTHER, and CRIMINAL CONVICTION
+
+```
+
+```{r}
+
+removals_2022 |>
+  group_by(SUMMARY, UNAF) |>
+  summarise (
+    most_common = sum(UNAF)
+  ) |>
+  arrange(desc(most_common))
+
+##2022: COUNTY TRANSFER OUT 3588
+
+removals_2024 |>
+  group_by(SUMMARY, UNAF) |>
+  summarise (
+    most_common = sum(UNAF)
+  ) |>
+  arrange(desc(most_common))
+
+##2024: COUNTY TRANSFER OUT 2703
+
+ahead_join_24 <- removals_2024 |>
+  mutate(perc_unaf_2024 = UNAF/TOTAL_X*100) |>
+  select(SUMMARY, perc_unaf_2024)
+
+ahead_join_22 <- removals_2022 |>
+  mutate(perc_unaf_2022 = UNAF/TOTAL_X*100) |>
+  select(SUMMARY, perc_unaf_2022)
+
+ahead_join_24 |>
+  inner_join(ahead_join_22) |>
+  mutate(perc_difference = perc_unaf_2024/perc_unaf_2022*100) |>
+  arrange(desc(perc_difference))
+
+##biggest percent difference UNAF 2022 - 2024: CONFIRMATION MAIL, MAIL VERIFICATION (NVRA), AND CRIMINAL CONVICTION, DUPLICATE
+
+```
+
+
 Q5. What's the best story idea or question you've seen as a result of the work you've done in this lab?
 
-A5.
-
+A5. I think the best story idea/question I've seen as a result of the work that I have done thus far (for the lab) is this: Why have the percentage of registered democratic voters gone down these past two years, especially when one accounts for the fact that Maryland is (and has been for decades) a largely blue state? Or rather, in times where more and more conservative notions, legislation, and party members are being elected to official positions (Congress, Senators, Supreme Court etc...), is this having actual sway upon Maryland constituents who have previously lacked change in their registration status until now? And what does this mean for the state, consitutants wants/needs, and the nation as a whole?
 
 
 
