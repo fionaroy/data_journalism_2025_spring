@@ -145,7 +145,6 @@ donors %>%
 #bell = repub = 2500
 #burr = repub = 1000
 
-12500+12500+12500+10000+10000+10000+10000+5000+4000+2500+2500+2500+2500+1000 = 97500
 
 ```
 
@@ -177,15 +176,36 @@ berger <- donors |>
 
 * **Sentence text**: "Beer distributors also gave during session. Mark Craig, the president of distributor R.H. Barringer, put more than $30,000 into state legislative campaigns during the six-week period, including the maximum $5,200 to Berger. He was the top individual donor to legislative campaigns during session."
 
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Analysis summary**: We were able to confirm that Mark Craig, put more than 33,000 dollars into the campaigns legislative session (from April 14, 2018, to June 28, 2018, he has donated 33200). Additionally we were able to confirm that he did indeed also contribute a max amount donation of 5,200 dollars to Berger.
 
 ```{r}
 # Put code to reverse engineer sentence here
 # Display results of code below this codeblock
 
-donors |>
-  
+Mark_Craig <- donors |>
+  filter(date >= '2018-05-16' & date <= '2018-06-29') |>
+  filter(name_clean == "MARK R CRAIG") |>
+  filter(amount == 5200) |>
+  group_by(name_clean, date, amount) |>
+  summarize(sum(amount))
 
+##above proves the maximum 5200 donation to Berger##
+
+donors |>
+  filter(name_clean == "MARK R CRAIG") |>
+  select(name_clean, date, amount) |>
+  arrange(date)
+
+##proves that his donations were all during the six-week legislative session##
+
+donors |>
+  filter(name_clean == "MARK R CRAIG") |>
+  group_by(name_clean) |>
+  summarise(
+    total_amount = sum(amount, na.rm = TRUE)
+  )
+  
+##proves that MARK R CRAIG has put more than 30000 dollars into the NC General Assembly session##
 
 ```
 
