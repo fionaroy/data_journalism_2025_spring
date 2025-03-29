@@ -176,11 +176,13 @@ berger <- donors |>
 
 * **Sentence text**: "Beer distributors also gave during session. Mark Craig, the president of distributor R.H. Barringer, put more than $30,000 into state legislative campaigns during the six-week period, including the maximum $5,200 to Berger. He was the top individual donor to legislative campaigns during session."
 
-* **Analysis summary**: We were able to confirm that Mark Craig, put more than 33,000 dollars into the campaigns legislative session (from April 14, 2018, to June 28, 2018, he has donated 33200). Additionally we were able to confirm that he did indeed also contribute a max amount donation of 5,200 dollars to Berger.
+* **Analysis summary**: We were able to confirm that Mark Craig, put more than 33,000 dollars into the campaigns legislative session (from April 14, 2018, to June 28, 2018, he has donated 33200; although some donations were a little outside of the legislative window, I believe they count due to the whole loophole business). Additionally we were able to confirm that he did indeed also contribute a max amount donation of 5,200 dollars to Berger.
 
 ```{r}
 # Put code to reverse engineer sentence here
 # Display results of code below this codeblock
+
+#have to run these block by block, but all answers are in here#
 
 Mark_Craig <- donors |>
   filter(date >= '2018-05-16' & date <= '2018-06-29') |>
@@ -197,6 +199,7 @@ donors |>
   arrange(date)
 
 ##proves that his donations were all during the six-week legislative session##
+##pulled the total_amount = sum(amount, na.rm = TRUE) part from chatgpt's advice to count the total amount of his donations##
 
 donors |>
   filter(name_clean == "MARK R CRAIG") |>
