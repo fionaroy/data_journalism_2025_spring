@@ -34,8 +34,15 @@ To use the API, you need to [an API key from the Census Bureau](https://api.cens
 **Task** Replace YOUR KEY HERE in the codeblock below with your Census API Key (leave the quotemarks).
 
 ```{r echo=FALSE}
-#census_api_key("YOUR KEY HERE", install=TRUE)
+census_api_key("a8c7acea5866e024b3fcbf50566db8e8e117a1bb", install=TRUE)
 ```
+
+```{r}
+
+readRenviron("~/.Renviron")
+
+```
+
 
 The `install=TRUE` part saves your key for future use.
 
@@ -103,7 +110,7 @@ And now we calculate the percent change.
 
 **Task** Run the following codeblock to calculate the percentage change and put the state with the largest percentage growth below. 
 
-**Answer**
+**Answer** Nevada is the state with the largest percentage growth.
 
 ```{r}
 alldata |> mutate(change = ((Population2010-Population2000)/Population2000)*100) |> arrange(desc(change))
@@ -128,7 +135,7 @@ We can measure this by median household income. That variable is `B19013_001`, s
 
 **Task** Run the following codeblock to find the Maryland county with the highest median household income and put the answer below.
 
-**Answer**
+**Answer** The Maryland county with the highest median household income is Howard County.
 
 ```{r}
 md <- get_acs(geography = "county",
@@ -163,11 +170,11 @@ As you can see, some of the error bars are quite wide. Some are narrow. But if t
 
 Is the difference between Calvert and Montgomery significant?
 
-**Answer**
+**Answer** The difference between Calvert and Montgomery County's overlap, and thus the difference is seen as not statistically significant. Although, Calvert County's margin is at least double Montgomery's, which should be taken into consideration, and thus are, at the very least, somewhat different from each other.
 
 Is the difference between Howard and everyone else significant?
 
-**Answer**
+**Answer** The difference between Howard County and all the other counties is significant because no other county's bar is anywhere near aligned with Howard, thus equating to their margin of errors being significantly different from each other. 
 
 ### Task 7: Joining Multiple Years Together
 
@@ -193,7 +200,7 @@ What we're going to do next is a lot, but each step is simple. We're going to jo
 
 **Task** Run the following codeblock to join the data, rename the population estimates and then calculate the values we need. Notice how we select *after* we do the initial calculations so we only see the columns we're interested in (and drop the ones we don't want to see). Also note how the select function has the minus sign (-) in front of some columns? That means we don't want to see them in our result. Did any counties see their median incomes fall from 2010-2020? Is the change outside the margin of error for both? 
 
-**Answer**
+**Answer** (I'm having a hard time reading these numbers, so this is a guess because to me, none of the median incomes appear to have fallen from 2010, to me they all appear to have increased both in estimate and in min and max from 2010 numbers to the numbers in 2020), (also the second question is implying two have changed ['both' implies two], so I'm going to guess). Caroline County and Somerset County on account of their estimates of medium income having the smallest percent change in their income, which (I'm fully guessing here) means that it's relatively close to the margin of error on account of the almost negligent change in income.
 
 ```{r}
 md10 |>
@@ -235,7 +242,7 @@ Note that the year is 2019, which is the latest year that we have data from ever
 
 Of the 20 zip codes with the largest amounts, which ones have estimated median household incomes of less than \$50,000?
 
-**Answer**
+**Answer** Baltimore City? (I'm really struggling to read these numbers, I think this is the answer...)
 
 ```{r}
 md_zipcodes <- get_acs(geography="zcta", variables = "B19013_001", state='MD', year=2019)
@@ -245,7 +252,13 @@ md_zips_with_acs <- md_zips_with_acs |> mutate(min=(estimate-moe), max=(estimate
 
 **Task** Arrange md_zips_with_acs by estimate showing the highest median household income first. What questions do you have about these top zip codes?
 
-**Answer**
+```{r}
+md_zips_with_acs |>
+  arrange(desc(estimate))
+
+```
+
+**Answer** My question is this: How come Cooksville, MD (Howard County) appears to have the largest estimated median household income, but then the next top five (2-6) highest estimated median household incomes all come from Montgomery County? In other words, what is so special about Cooksville, MD?
 
 
 
