@@ -1,0 +1,229 @@
+---
+title: "lab_07"
+author: "derek willis"
+date: "2024-08-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## You will need
+
+-   A Census API key
+
+## Load libraries and establish settings
+
+You'll need to load two packages for this: the tidyverse and tidycensus.
+
+**Task** load these two packages
+
+```{r}
+# Turn off scientific notation
+options(scipen=999)
+
+# Load the tidyverse.
+library(tidyverse)
+library(tidycensus)
+```
+
+## Setup Census API
+
+You'll need your Census API Key:
+
+**Task** set your API Key *only* if you haven't already
+
+```{r echo=FALSE}
+#census_api_key("a8c7acea5866e024b3fcbf50566db8e8e117a1bb", overwrite=TRUE)
+```
+
+## Load and view ACS variables
+
+You'll also need to load the list of American Community Survey variables from the 2022 5-year estimates so you can identify the codes you need:
+
+**Task** load the variables from the 2022 5-year ACS and save them to a dataframe
+
+```{r}
+
+acs_2022 <- load_variables(year = 2022, dataset = "acs5", cache = TRUE)
+
+view(acs_2022)
+
+```
+
+## Answer questions
+
+**Q1** What is the Maryland jurisdiction with the lowest median age, according to the ACS 2022 5-year estimates? You will need to find the variable for median age first.
+
+**A1** The Maryland jurisdiction with the lowest median age is Baltimore City with an age of 36.
+
+```{r}
+##asked chat for assistance on obtaining variable b/c census info confuses me##
+
+acs_2022 |>
+  filter(grepl("median age", label, ignore.case = TRUE))
+
+```
+
+```{r}
+##slight assistance from chat, on what all to include##
+
+md_median_age <- get_acs(geography = "county", variables = "B01002_001", state = "MD", year = 2022, survey = "acs5")
+
+md_median_age |>
+  arrange(estimate)
+
+```
+
+
+**Q2** Which Maryland counties have a median age of at least 50? You can use the dataframe you just made to answer this, but you must write code to display only those counties with a median age of at least 50.
+
+**A2** The Maryland counties that have a median age of at least 50 are Talbot County (51.4) and Worcester County (50.6).
+
+```{r}
+
+md_median_age |>
+  filter(estimate >= 50)
+
+```
+
+## Ticket-Splitting
+
+Ticket-splitting (voting for candidates from multiple parties) in today's political environment seems like a rarity, but it does happen, even in states like Maryland. For the remaining questions you'll be looking at cast vote records from Frederick County - Maryland's most competitive county - for the 2022 general election. You'll be trying to identify the zip codes where ticket-splitting is happening the most and to learn more about those places. To do that, you'll need to read in two CSV files, join them and then also bring in data from the Census API.
+
+### Setup
+
+Load the two CSV files in the `data` folder: one containing the ballot choices of Frederick voters in five races (governor, comptroller, attorney general and U.S. House) and the other containing information about Frederick's voting locations. You'll need to join them together.
+
+```{r}
+
+f_cvr <- read.csv("data/frederick_cvr.csv")
+
+```
+
+```{r}
+
+f_precincts <- read.csv("data/frederick_precincts.csv")
+
+```
+
+```{r}
+##joining together
+
+f_joined <- f_precincts |> left_join(f_cvr)
+
+```
+
+**Q3** Let's answer some basic questions about ticket-splitting: how many voters voted for different parties in the governor and comptroller's race? How many voted for the same party in both races? What percentage of all voters split their tickets in those races? In how many cases did voters choose the same party in all five contests? What percentage of all voters does that represent?
+
+**A3** The amount of voters who voted for different parties in the governor and comptroller's race is 11871. The amount of voters who voted for the same party in both the races was 95221. The percentage of all voters who split their tickets in those races is 11%. In 89916 cases did voters choose the same party in all five contests. The percentage of all voters that represents is 83.79%.
+
+```{r}
+##how many voters voted for different parties in the governor and comptroller's race##
+
+f_joined |>
+  filter(governor_lt_governor != comptroller) |>
+  nrow()
+  
+
+```
+
+
+```{r}
+##how many voters voted for the same party in both races##
+
+f_joined |>
+  filter(governor_lt_governor == comptroller) |>
+  nrow()
+
+```
+
+
+```{r}
+##what percentage of all voters split their tickets in those races##
+
+f_joined |>
+  mutate( split_governor = case_when(governor_lt_governor != comptroller ~ TRUE, TRUE ~ FALSE)) |>
+  group_by(split_governor) |>
+  summarise(
+    count = n()
+  ) |>
+  mutate(percentage = count/sum(count)*100)
+
+```
+
+
+```{r}
+##in how many cases did voters choose the same party in all five contests##
+
+f_joined |>
+  filter(governor_lt_governor == comptroller & comptroller == attorney_general & attorney_general == u_s_senator & u_s_senator == representative_in_congress_6) |>
+  summarise(
+    count = n()
+  )
+
+```
+
+
+```{r}
+##what percentage of all voters does that represent##
+
+f_joined |>
+  mutate(
+    not_split = case_when(governor_lt_governor == comptroller & comptroller == attorney_general & attorney_general == u_s_senator & u_s_senator == representative_in_congress_6 ~ TRUE, TRUE ~ FALSE)
+    ) |>
+  group_by(not_split) |>
+  summarise(
+    count = n()
+  ) |>
+  mutate(
+    percentage = count/sum(count)*100
+  )
+
+```
+
+
+**Q4** Now let's look for the zip codes where voters preferred Republicans in every race *except* the governor's race, where Dan Cox lost to Wes Moore by a wide margin. Write code to generate a dataframe of zip codes with the number of those voters for each of those zip codes, ordering the dataframe so that the zip code with the most ticket-splitters appears first.
+
+**A4** The zipcode with the most ticket-splitting is 21702 with 8519 voters (17.18%). 
+
+```{r}
+
+zipcodes <- f_joined |>
+  mutate(
+    spliting = case_when(
+    governor_lt_governor != "REP" & comptroller == "DEM" & attorney_general == "DEM" & u_s_senator == "DEM" & representative_in_congress_6 == "DEM" ~ "Yes", TRUE ~ "No")) |>
+  filter(spliting == "Yes") |>
+  group_by(spliting, zipcode) |>
+  summarise(
+    count = n()
+  ) |>
+  mutate(percentage = count/sum(count)*100) |>
+  arrange(desc(percentage))
+  
+zipcodes
+
+```
+
+**Q5** Let's find out more about those zip codes from A4. Using tidycensus, get a dataframe of Maryland zip codes and their median ages, then join it to the dataframe you produced in A4. NOTE: you'll need to ensure that the two columns you use for the join are the same datatype. Summarize your findings; how would you describe the zip codes with more non-Cox Republicans compared to those with fewer? Where are those leading zip codes located?
+
+**A5** The zip codes that have more 
+
+```{r}
+##my associate chat was very very helpful with this one as well...##
+
+md_zipcode_median_age <- get_acs(geography = "zcta", variables = "B01002_001", year = 2022, survey = "acs5") |>
+  rename(zipcode = GEOID, median_age = estimate) |>
+  mutate(zipcode = as.integer(zipcode))
+
+
+##attempting to combine, still help from chat##
+combined_zipcodes <- zipcodes |> left_join(md_zipcode_median_age)
+
+combined_zipcodes
+
+```
+
+
+
