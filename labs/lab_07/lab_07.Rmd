@@ -208,7 +208,7 @@ zipcodes
 
 **Q5** Let's find out more about those zip codes from A4. Using tidycensus, get a dataframe of Maryland zip codes and their median ages, then join it to the dataframe you produced in A4. NOTE: you'll need to ensure that the two columns you use for the join are the same datatype. Summarize your findings; how would you describe the zip codes with more non-Cox Republicans compared to those with fewer? Where are those leading zip codes located?
 
-**A5** The zip codes that have more 
+**A5** The zip codes that have more more non-Cox Republicans are in Frederick, MD, are roughly in the middle class range, and are roughly in the age bracket of mid-to-late 30s. Those with less non-Cox Republicans are in areas like Burkittsville, Union Bridge, and Sabillasville, MD, appear to be in the lower to middle middle/working class range, with a average median age of between lower 40s - high 50s. Thus, it can be said that it appears that more non-Cox Republican zip codes are in a younger age bracket than not.
 
 ```{r}
 ##my associate chat was very very helpful with this one as well...##

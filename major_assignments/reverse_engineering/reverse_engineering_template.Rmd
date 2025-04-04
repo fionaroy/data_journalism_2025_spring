@@ -222,7 +222,17 @@ donors |>
 # Put code to reverse engineer sentence here
 # Display results of code below this codeblock
 
+##find total in-session giving##
+donors |>
+  filter(date >= '2018-05-16' & date <= '2018-06-29') |>
+  summarise(sum(amount))
 
+##Gov. Roy Cooper's main campaign account donation total## ##could not prove at this point in time due to lack of ability in finding the committee's name in the provided data##
+
+campaign_totals <- donors |>
+  filter(date >= '2018-05-16' & date <= '2018-06-29') |>
+  group_by(committee_name) |>
+  summarise(sum(amount))
 
 ```
 
@@ -236,7 +246,21 @@ donors |>
 # Put code to reverse engineer sentence here
 # Display results of code below this codeblock
 
+##used chat to help improve code structure, Brinkley had the code already written but chat added the part about for total PAC donations##
 
+# Filter for donations from PACs during the legislative session
+pac_donations <- donors |>
+  filter(date >= '2018-05-16' & date <= '2018-06-29') |>
+  filter(str_detect(name_clean, "PAC"))  # More flexible matching
+
+# View total amount
+total_pac_amount <- pac_donations |>
+  summarise(total_amount = sum(amount))
+
+print(total_pac_amount)
+
+# Optional: View individual PAC donations (to check for lobbyist links manually or join with a lobbyist list)
+print(pac_donations)
 
 
 ```
