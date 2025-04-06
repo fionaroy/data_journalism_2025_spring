@@ -272,7 +272,7 @@ total_pac_amount <- pac_donations |>
     total_amount = sum(amount, na.rm = TRUE)
     )
 
-total_pac_amount --> #waaaaay > than 16,000; like 33,000+#
+total_pac_amount #waaaaay > than 16,000; like 33,000+#
 
 # Optional: View individual PAC donations (to check for lobbyist links manually or join with a lobbyist list)
 #print(pac_donations)
