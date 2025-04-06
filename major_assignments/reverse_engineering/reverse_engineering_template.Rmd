@@ -216,7 +216,7 @@ donors |>
 
 * **Sentence text**: "Add in donations to the two main political parties and to a handful of other large fundraising vehicles for state legislative races, and the in-session giving topped $3.4 million. Gov. Roy Cooper's main campaign account brought in another $407,000 during session."
 
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Analysis summary**: We were able to prove the part about how in-session giving topped at approximately $3.4 million dollars. However, despite numerous attempts, we have not been able to prove that Gov. Roy Cooper's main campaign account brought int another 407000 dollars. We cannot find his campaign account info in our data -- which is supposed to be named 'Roy Cooper For North Carolina' (2018) -- and have tried other names and combinations of other possible clean_name entries or possibly Dem committees, but could not prove it on account of this.
 
 ```{r}
 # Put code to reverse engineer sentence here
@@ -231,8 +231,18 @@ donors |>
 
 campaign_totals <- donors |>
   filter(date >= '2018-05-16' & date <= '2018-06-29') |>
-  group_by(committee_name) |>
-  summarise(sum(amount))
+  filter(name_clean == "COOPER FOR NORTH CAROLINA" | committee_name == "NC DEC - STATE" | committee_name == "NORTH CAROLINA DEMOCRATIC PARTY - BUILDING") |>
+  group_by(name_clean, committee_name, date, amount) |>
+  summarise(
+    total_amount = sum(amount, na.rm = TRUE)
+  ) |>
+  arrange(desc(total_amount))
+
+campaign_totals
+
+##there are no names that go with Roy Cooper or his main campaign. I have looked literally everywhere I could think of. There is only one entry that pops up, but it is only a approx. 550$ donation. Unless all of these donations are under a different campaign name that we would have no way of knowing what it is, I don't see this information being in this dataset. I tried to filter maybe by NC DEC - STATE or NORTH CAROLINA DEMOCRACTIC PARTY - BUILDING, but was unsuccessful (as I cannot confirm that these donations were for him nor do the numbers match [or if some of them are I have no way of knowing which/any/all]). And to confirm, I have bookmarked links online for what his main campaign account was named at the time of this articles publishment, and it is confirmed to be "Roy Cooper For North Carolina"##
+
+##I have gone sleuthing though to try to find the information elsewhere, and I have stumbled across the last remaining access to 2018 financial data of Cooper --> can be found at this link (https://cf.ncsbe.gov/CFOrgLkup/ReportSection/?RID=166493&SID=STA-C0498N-C-002&CN=COOPER%20FOR%20NORTH%20CAROLINA&RN=2018%20Mid%20Year%20Semi-Annual).##
 
 ```
 
@@ -240,7 +250,7 @@ campaign_totals <- donors |>
 
 * **Sentence text**: "A WRAL News analysis of campaign finance filings also turned up $16,000 in donations to legislative campaigns during session from 15 PACs with a lobbyist. Each would appear to be a violation of state fundraising rules, but spokespeople for most of the PACs, or the companies they represent, said there was a simple explanation: The checks were written before session."
 
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Analysis summary**: We were not able to definitively confirm the results of this finding on account of the article itself (i.e. the original analysis of the article's Journalists) being rather vague/non-specific enough. More specifically, we were only able to deduce the PAC's that had lobbyists who donated during session through extra -- intensive -- research on our end by uncovering old government databases (which we can provide if wanted), but were lacking the necessary information to figure out which, out of the ones we found, were the ones who, in total, donated 16,000 dollars with check "written before session."
 
 ```{r}
 # Put code to reverse engineer sentence here
@@ -253,20 +263,27 @@ pac_donations <- donors |>
   filter(date >= '2018-05-16' & date <= '2018-06-29') |>
   filter(str_detect(name_clean, "PAC"))  # More flexible matching
 
-# View total amount
+# View total amount; filtered these specific PAC's because they were listed, by way of a NC Secretary of State's Office 2018 document, as North Carolina lobbyist listings. also took into account information Brinkley found that listed PAC's with lobbyists at this time in this assembly and pulled out the specific ones listed in our data set and time frame etc.#
 total_pac_amount <- pac_donations |>
-  summarise(total_amount = sum(amount))
+  filter(date >= '2018-05-16' & date <= '2018-06-29') |>
+  filter(name_clean == "NORTH CAROLINA BEER & WINE WHOLESALERS ASSOC PAC" | name_clean == "NC OUTDOOR ADVERTISING ASSOC PAC" | name_clean == "NC CHIROPRACTIC ASSOC PAC" | name_clean == "NC STATE OPTOMETRIC SOCIETY PAC" | name_clean == "NC FIRE PAC" | name_clean == "NC ADCOVATES FOR JUSTICE PAC" | name_clean == "NC PORK COUNCIL PAC" | name_clean == "NC POULTRY FEDERATION PAC" | name_clean == "NC POULTRY FEDERATION PAC" | name_clean == "SMITHFIELD FOODS PAC" | name_clean == "WALMART STORES PAC" | name_clean == "WARD AND SMITH PAC" | name_clean == "REMY KEMP & ASSOCIATES PAC" | name_clean == "BB&T PAC" | name_clean == "AT&T PAC" | name_clean == "NATIONWIDE CAROLINA PAC") |>
+  group_by(name_clean, date, amount) |>
+  summarise(
+    total_amount = sum(amount, na.rm = TRUE)
+    )
 
-print(total_pac_amount)
+total_pac_amount --> #waaaaay > than 16,000; like 33,000+#
 
 # Optional: View individual PAC donations (to check for lobbyist links manually or join with a lobbyist list)
-print(pac_donations)
+#print(pac_donations)
 
 
 ```
 
 -30-
 
+Critical Analysis Memo: (750 words)
 
+  This WRAL article explores how CEOs and other top executives were able to contribute to campaign accounts during North Carolina’s legislative session, despite a state law prohibiting such donations. The investigation reveals how business interests found workarounds to the law, either by making donations as individuals or by having PACs write checks before the session and mail them during it. The piece focuses on these legal loopholes and how they were exploited during the 2018 session. The story names specific industries and individuals —such as hog farmers and beer distributors— who donated during the session and had major legislative interests at stake. The journalists uncovered this through a mix of campaign finance data analysis and interviews with donors, recipients, and watchdog groups. While they spoke to many involved, only a few responded, but those interviews helped give the story more depth and credibility. By letting lobbyists and politicians explain the reasons behind the in-session donations, the article gave readers a more nuanced view and allowed them to draw their own conclusions. However, this approach didn’t bring enough life to the story to make it engaging and interesting as they didn’t do a great job putting the numbers into context or explaining the significance of these loopholes they found. They didn’t explain how it affected readers or why it’s important. The findings were all communicated in prose, which made it difficult to parse at times: many paragraphs were full of big numbers, and after a while it became hard to assign any kind of significance to those numbers. Thus, this made the story was difficult to follow – we even had to read it multiple times. If more data visualizations were added and less prose/big numbers, the story would have easier reader comprehension. There is one helpful graphic of the timeline of donations that includes the cutoff, however it's pretty far down in the story. It should have been placed higher in the story to help prevent overwhelming readers. Other graphics might include a visualization of which groups gave the most money during session, and to whom etc. The reporters didn’t communicate any flaws/shortcomings in the story, or anything about the analysis. There are links midway down the story for methodology and data but they're easy to miss. The methodology link details a story explaining what data they used and what they were analyzing, but its vague and not helpful. They bring up the potential issue of double-counting and how they addressed it in their analysis, but don’t go into much detail about how they actually did the analysis. No specifications about what programming language they used is mentioned, and they don’t walk the reader through their process. The link to the GitHub has a README file that has repetitive information found in the methodology, and csv/excel files of the data they used. There’s no documentation of the actual code that they ran to get their findings, which isn’t ideal. In the interest of transparency, it would have been better to have the code readily available for anyone who’d like to fact-check it. During our own reverse engineering, there were some things (like the governor’s campaign) that showed up in the story but not in the dataset provided. To promote more responsible and transparent journalism, these journalists should have their entire process documented in GitHub. Additionally, the reporters did a poor job of communicating to the reader, specifying which session they were referencing. For instance, it took us a while to figure out what session and specific dates we would need to use when working on our code, which hindered our ability to fact-check. The data set came from North Carolina State Board of Elections and Ethics Enforcement campaign finance reports. The journalists write in their methodology that they used Open Refine to clean up the contributor names, but don’t mention whether they built the dataset or downloaded it from online. We checked out the campaign finance report website linked in the methodology story. It seems like the journalists probably had to build the data set themselves since you can’t search for all campaign donations by time period. There are four things that the site says you can search by: committee/entity, document type, reported transaction, and penalty. The journalists probably looked up all the legislators’ committees on here and combined the data they got in a single dataset, then cleaned it up. However, we shouldn't have to guess this, they should be able to walk readers through that in their methodology. 
 
 
