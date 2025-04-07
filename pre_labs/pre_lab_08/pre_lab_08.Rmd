@@ -31,7 +31,9 @@ The dataset we'll use is voter registration data by county in Maryland from 2020
 
 ### Task 2: Load data
 
-**Task** Run the following code to load the data. In the space below, indicate how many rows and columns it has. **Answer**
+**Task** Run the following code to load the data. In the space below, indicate how many rows and columns it has.
+
+**Answer** 24 rows, 18 columns.
 
 ```{r}
 md_voters <- read_csv("data/maryland_voters_2024_2022.csv")
@@ -52,12 +54,13 @@ First, we'll create a dataframe of those top 10, called maryland_top_counties.
 ### Task 3: Create a dataframe of top 10 counties for unaffiliated voter change in Maryland
 
 **Task** Complete and run the following code to create a dataframe of top 10 counties with the biggest change in unaffiliated voters in Maryland. In the space below, explain what each step of the code below is doing in English. 
-**Answer**
+
+**Answer** The first part of the code is mutating the md_voters dataset to calculate a new column that calculates the difference in unaffiliated voters between 2022-2024. The next part of the code is making the calculations of the first part into a new dataset (for organizational and data purposes), arranging it so that the largest change in unaffiliated voters in MD counties is put first, and that the new dataset is organized by only the county and calculated difference (and only the top ten results). The last line of code just visually shows the new dataset in the r notebook rather than opening it up through the environment.
 
 ```{r}
 
 md_voters <- md_voters |> 
-  mutate(UNAF_DIFF = ? - ?)
+  mutate(UNAF_DIFF = UNAF_2024 - UNAF_2022)
 
 maryland_top_counties <- md_voters |>
   arrange(desc(UNAF_DIFF)) |>
@@ -73,7 +76,9 @@ With ggplot, the first thing we'll always do is draw a blank canvas that will co
 
 ### Task 4: Create an empty ggplot container
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below.
+
+**Answer** A blank, grey box.
 
 ```{r}
 maryland_top_counties |>
@@ -104,7 +109,9 @@ After we've invoked the ggplot() function, you'll notice we're using a + symbol.
 
 ### Task 5: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below.
+
+**Answer** A bar chart with the new dataset about the unaffiliated differences, organized by each MD county (x-plot) and the actual numerical difference (y-plot) (used toe ggplot() function to do this).
 
 ```{r}
 maryland_top_counties |>
@@ -116,7 +123,9 @@ This is a very basic chart. But it's hard to derive much meaning from this chart
 
 ### Task 6: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock?
+
+**Answer** The bar chart is now organized by smallest to largest numerical difference so it is easier to read/visualize for readers. (it is reorder()[ed] to do this)
 
 ```{r}
 maryland_top_counties |>
@@ -128,7 +137,9 @@ This is a little more useful. But the bottom is kind of a mess, with overlapping
 
 ### Task 7: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock?
+
+**Answer** Now the bar chart has been flipped from vertical to a horizonal chart with the function coord_flip() to make it less messy and easier to read for viewers.
 
 ```{r}
 maryland_top_counties |>
@@ -147,7 +158,9 @@ It's kind of like applying CSS to html. Here I'm changing the theme slightly to 
 
 ### Task 8: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock?
+
+**Answer** Now the background of the chart is no longer grey, but white, to make it prettier (used the theme_minimal() code to do this.)
 
 ```{r}
 maryland_top_counties |>
@@ -163,7 +176,9 @@ First, you have to install and load a package that contains lots of extra themes
 
 ### Task 9: Run the following code
 
-**Task** Run the following code. **Answer**
+**Task** Run the following code.
+
+**Answer** don't know what kind of answer you want here, but ggthemes package is installed.
 
 ```{r}
 install.packages('ggthemes')
@@ -174,7 +189,9 @@ And now we'll apply the economist theme from that package with theme_economist()
 
 ### Task 10: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last version of the chart? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last version of the chart?
+
+**Answer** Now the whole chart's background is a blue/grey color, and the bars are laid on top of white lines to make it more symmetrical and organized. The fonts is also darker and more simplistic to read (black, bolded [to a degree], and slightly larger in size; more aligned with bars on chart). (done with theme_economist()).
 
 ```{r}
 maryland_top_counties |>
@@ -188,7 +205,9 @@ Those axis titles are kind of a mess. Let's change "count" on the x axis to "net
 
 ### Task 11: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock?
+
+**Answer** Axis titles have been changed to x axis --> net change; y axis --> county. There is also now a title along the top, "Counties with Biggest Jumps in Unaffiliated Voters", and source title along the bottom of the graph, "source: Maryland State Board of Elections". Although the spacing needs to be better. (done with labs() function).
 
 ```{r}
 maryland_top_counties |>
@@ -223,7 +242,9 @@ So, let's load some WinRed contribution data we've previously used and create a 
 md_winred <- read_rds("data/maryland_winred.rds")
 ```
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below.
+
+**Answer** After running this code, I see below a new dataset that organizes md_winred info into total contributions/donations (by all people) entered per date entered into the original dataset. (how many people/organizations/etc. donated per day included in the original dataset)
 
 ```{r}
 
@@ -242,7 +263,9 @@ We'll put the date on the x axis and total contributions on the y axis.
 
 ### Task 13: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below.
+
+**Answer** A basic line chart that has the date on the x-axis and the total number of contributions on the y-axis.
 
 ```{r}
 md_winred_by_date |>
@@ -262,7 +285,9 @@ We'll set the date_breaks to appear for every week; if we wanted every month, we
 
 ### Task 14: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below.
+
+**Answer** Now the line chart has more specifications in it: the x axis now has one tick mark and label per month to indicate the dates better (done with scale_x_date()). These date_breaks appear every week.
 
 ```{r}
 md_winred_by_date |>
@@ -277,7 +302,9 @@ Those are a little hard to read, so we can turn them 45 degrees to remove the ov
 
 ### Task 15: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below.
+
+**Answer** To make it easier for reader comprehension, the new date titles along the x-axis have been turned 45 degrees to remove overlap using the theme() function for styling. 
 
 ```{r}
 md_winred_by_date |>
@@ -293,3 +320,7 @@ md_winred_by_date |>
 Again, this isn't as pretty as we could make it. But by charting this, we can quickly see a pattern that can help guide our reporting.
 
 We're just scratching the surface of what ggplot can do, and chart types. There's so much more you can do, so many other chart types you can make. But the basics we've shown here will get you started.
+
+
+
+
