@@ -1166,7 +1166,7 @@ Now we can join this dataframe to other zip code data where the zip code column 
 
 
 
-
+vars <- tidycensus::load_variables(2022, "acs5") 
 
 
 
