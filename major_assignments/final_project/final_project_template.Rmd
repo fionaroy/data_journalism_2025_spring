@@ -1,0 +1,102 @@
+---
+title: "Data Analysis Project"
+author: "Fiona Roy"
+date: "04-25-2025"
+output:
+  html_document:
+    theme: cerulean
+    highlight: pygments
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction 
+
+In this notebook, we are analyzing data for a new story from the U.S. House of Representatives Expenditure Data (October 1, 2024 - December 31, 2024)
+
+## Load libraries
+
+Loading required libraries for this analysis.
+
+```{r echo=FALSE, message=FALSE}
+# turn off sci notation
+options(scipen=999)
+library(tidyverse)
+library(lubridate)
+library(refinr)
+library(janitor)
+library(dplyr)
+library(readr)
+```
+
+## Load and Cleaning Data
+
+In this section, describe the source of the data, write a basic data dictionary for data you are working with, and discuss any caveats or issues you discovered working with this data. 
+
+```{r}
+# Load required data
+# Path to data should be loaded from folder "data" i.e. read_csv("data/name_of_data.csv")
+# Clean required data and prepare for analysis if needed. 
+transactions <- read_csv("data/OCTOBER-DECEMBER-2024-SOD-DETAIL-GRID-FINAL.csv")
+summary <- read_csv("data/OCTOBER-DECEMBER-2024-SOD-SUMMARY-GRID-FINAL.csv")
+
+```
+
+```{r}
+##cleaning transactions data##
+transactions <- transactions |>
+  mutate(TRANSACTION_DATE=dmy(TRANSACTION_DATE))
+
+```
+
+```{r}
+##cleaning transactions data##
+transactions <- transactions |>
+  mutate(PERFORM_START_DT=dmy(PERFORM_START_DT))
+
+```
+
+```{r}
+##cleaning transactions data##
+transactions <- transactions |>
+  mutate(PERFORM_END_DT=dmy(PERFORM_END_DT))
+
+```
+
+```{r}
+##reading data quickly##
+write_csv(transactions, "data/transactions.csv")
+
+```
+
+```{r}
+transactions <- read_csv("data/transactions.csv")
+
+glimpse(transactions)
+```
+Detail brief information: 
+- Rows: 129,843
+- Columns: 18
+- Obvious limitations/flaws?: The data does not specifically say party affiliation which would be great information to have to track the difference in spending between party members (a way to figure out party preferences and/or possible plans).
+- Limits in terms of timeframe (what is or isn't included in the code/information that might be needed later on): The data only has information for the later half of 2024, so our analysis is pretty much limited to that. We might need data from earlier in the year, or earlier years, in order to make a better/more in depth analysis of the information we have obtained to track potential trends in the acquired data. Might need more info as to how to track what vendor information could provide us, or what budget_object_class could imply.
+
+
+```{r}
+##brief analysis of summary data##
+glimpse(summary)
+
+```
+Summary brief information:
+- Rows: 6,676
+- Columns: 5
+- Obvious limitations/flaws?: The data does not specifically say party affiliation which would be great information to have to track the difference in spending between party members (a way to figure out party preferences and/or possible plans).
+- Limits in terms of timeframe (what is or isn't included in the code/information that might be needed later on): The data only has information for the later half of 2024, so our analysis is pretty much limited to that. We might need data from earlier in the year, or earlier years, in order to make a better/more in depth analysis of the information we have obtained to track potential trends in the acquired data.
+
+
+
