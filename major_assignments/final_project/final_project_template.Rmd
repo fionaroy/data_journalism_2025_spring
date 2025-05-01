@@ -48,6 +48,8 @@ summary <- read_csv("data/OCTOBER-DECEMBER-2024-SOD-SUMMARY-GRID-FINAL.csv")
 
 ```
 
+---cleaning transaction data---
+
 ```{r}
 ##cleaning transactions data##
 transactions <- transactions |>
@@ -76,27 +78,159 @@ write_csv(transactions, "data/transactions.csv")
 ```
 
 ```{r}
+##replacing spaces; provided by Ryan##
+transactions |>
+  mutate(DESCRIPTION = trimws(DESCRIPTION)) |>
+  mutate(DESCRIPTION = str_replace_all(DESCRIPTION, "\\s+", " "))
+
+```
+
+```{r}
 transactions <- read_csv("data/transactions.csv")
 
 glimpse(transactions)
 ```
-Detail brief information: 
+
+```{r}
+##further cleaning data but figuring out what columns have preexisting issues due to a lack of og data provided by the expenditure data##
+#group/counts every column in input dataframe##
+group_count <- function(input_df, group_column_name='n()', state_filter=NA, start_col = 1){
+  column_names <- colnames(input_df)
+  if(!is.na(state_filter)){
+    input_df <- input_df %>%
+      filter(state == state_filter)
+  }
+  for (column in column_names[start_col:length(column_names)]){
+    output <- grouper(input_df, column, group_column_name)
+    print(output)
+  }
+}
+
+group_count(transactions)
+
+```
+Transactions Details brief information: 
 - Rows: 129,843
 - Columns: 18
-- Obvious limitations/flaws?: The data does not specifically say party affiliation which would be great information to have to track the difference in spending between party members (a way to figure out party preferences and/or possible plans).
-- Limits in terms of timeframe (what is or isn't included in the code/information that might be needed later on): The data only has information for the later half of 2024, so our analysis is pretty much limited to that. We might need data from earlier in the year, or earlier years, in order to make a better/more in depth analysis of the information we have obtained to track potential trends in the acquired data. Might need more info as to how to track what vendor information could provide us, or what budget_object_class could imply.
+- Organization: name of gvpt office or department that is having the service done for them
+- fiscal_year_or_legislative_year: the fiscal/legislative year that the transaction occurred
+- organization_code: internal code that is used to make unique identification for each specific organization --> more organized records
+- program: name of the program/spending category that is associated with each transaction
+- program_code: short code representing each type of program possible for each transaction (used sorting/grouping)
+- sort_subtotal_description: expense type or the category (classify the type of expense in general terms)
+- budget_object_class: numeric code representing broad classification of spending (easier quantifiable spending organization)
+- sort_sequence: how the data/each transaction should be sorted for record keeping
+- transaction_date: actual date of when each transaction was recorded/written down
+- data_source: the source of the transaction information
+- document: identifier/code (invoice, reference number, another quantifiable record)
+- vendor_name: name of the vendor that paid for the transaction
+- vendor_id: unique identifier for each individual vendor (helps to track different names)
+- perform_start_dt: start date of the service period the expense applies to
+- perform_end_dt: end date of the service period
+- description: explanation describing type of transaction
+- budget_object_code: helps map specific line items in budgeting
+- amount: monetary amount of each transaction
+----------------------------------------------------------------------------------------------------
+- Obvious limitations/flaws?: 
+    
+    
+    
+  The data does not specifically say party affiliation which would be great information to have to track the difference in spending between party members (a way to figure out party preferences and/or possible plans).
 
+- Limits in terms of time frame (what is or isn't included in the code/information that might be needed later on):
+    The data only has information for the later half of 2024, so our analysis is pretty much limited to that. We might need data from earlier in the year, or earlier years, in order to make a better/more in depth analysis of the information we have obtained to track potential trends in the acquired data. Might need more info as to how to track what vendor information could provide us, or what budget_object_class could imply.
+
+
+---cleaning summary data---
 
 ```{r}
 ##brief analysis of summary data##
 glimpse(summary)
 
 ```
+
+```{r}
+##further cleaning data but figuring out what columns have preexisting issues due to a lack of og data provided by the expenditure data##
+#group/counts every column in input dataframe##
+group_count <- function(input_df, group_column_name='n()', state_filter=NA, start_col = 1){
+  column_names <- colnames(input_df)
+  if(!is.na(state_filter)){
+    input_df <- input_df %>%
+      filter(state == state_filter)
+  }
+  for (column in column_names[start_col:length(column_names)]){
+    output <- grouper(input_df, column, group_column_name)
+    print(output)
+  }
+}
+
+group_count(summary)
+
+```
+
 Summary brief information:
 - Rows: 6,676
 - Columns: 5
+- organization: name of gvpt office or department that is having the service done for them
+- program: name of the program/spending category that is associated with each transaction
+- description: explanation describing type of transaction
+- ytd_amount: year-to-date amount; cumulative total spending for a program/vendor/category from the beginning of the fiscal YEAR up to the current date
+- qtd_amount: quarter-to-date; cumulative total spending from beginning of current fiscal QUARTER to the current date
+---------------------------------------------------------------------------------------------------------
+
+  (2024 fiscal year begins oct 1. 2023, ends sept 30 2024)
+  (quarter one: oct 1, 2023 - dec 31, 2023)
+  (quarter two: jan 1, 2024 - march 31, 2024)
+  (quarter three: april 1, 2024 - june 30, 2024)
+  (quarter four: july 1, 2024 - spet 30, 2024)
+  
+  (2025 fiscal year begins oct 1. 2024, ends spet 30, 2025)
+  (quarter one: oct 1, 2024 - dec 31, 2024)
+  (quarter two: jan 1, 2025 - march 31, 2025)
+  (quarter three: april 1, 2025 - june 30, 2025)
+  (quarter four: july 1, 2025 - spet 30, 2025)
+  
+**we are currently in fiscal 2025, quarter three in real time
+
+**this data set contains all information pertaining to fiscal year 2025, Q1!!
+
+(SOD published quarterly --> usually 60 days after end of each calender quarter: next report covering Q2 should be coming our EOM May)
+------------------------------------------------------------------------------------------------------
 - Obvious limitations/flaws?: The data does not specifically say party affiliation which would be great information to have to track the difference in spending between party members (a way to figure out party preferences and/or possible plans).
 - Limits in terms of timeframe (what is or isn't included in the code/information that might be needed later on): The data only has information for the later half of 2024, so our analysis is pretty much limited to that. We might need data from earlier in the year, or earlier years, in order to make a better/more in depth analysis of the information we have obtained to track potential trends in the acquired data.
+
+
+
+---question answering---
+
+
+Question One:
+
+
+
+Question Two:
+
+
+
+Question Three:
+
+
+
+Question Four:
+
+
+
+Question Five:
+
+
+
+
+
+
+
+
+
+
 
 
 
