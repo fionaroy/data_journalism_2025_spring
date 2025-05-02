@@ -101,7 +101,9 @@ group_count <- function(input_df, group_column_name='n()', state_filter=NA, star
       filter(state == state_filter)
   }
   for (column in column_names[start_col:length(column_names)]){
-    output <- grouper(input_df, column, group_column_name)
+    output <- input_df %>%
+      group_by(.data[[column]]) %>%
+      summarise(count = n(), .groups = "drop")
     print(output)
   }
 }
@@ -217,7 +219,9 @@ group_count <- function(input_df, group_column_name='n()', state_filter=NA, star
       filter(state == state_filter)
   }
   for (column in column_names[start_col:length(column_names)]){
-    output <- grouper(input_df, column, group_column_name)
+    output <- input_df %>%
+      group_by(.data[[column]]) %>%
+      summarise(count = n(), .groups = "drop")
     print(output)
   }
 }
@@ -347,7 +351,7 @@ highest_lowest_spenders |>
 #went into excel, deleted everything that wasn't a rep's office, including leadership offices. i feel like their budgets might be huge, but we can come back and look at that once we look at normal members of the house.
 #ended up making a new excel spreadsheet because the old one had a bunch of empty rows at the bottom when I read it back in. 
 write_csv(grouped_by_org, file = "grouped_by_org.csv")
-grouped_by_reps <- read_csv("grouped_by_reps.csv")
+grouped_by_reps <- read_csv("data/grouped_by_reps.csv")
 
 grouped_by_reps |> 
   summarize(mean = mean(sum), median = median(sum), max = max(sum), min = min(sum), sd = sd(sum))
@@ -378,8 +382,6 @@ grouped_by_reps |>
 #YOOOO THANKS CHAT 
 
 ```
-
-
 
 
 Question Two:
