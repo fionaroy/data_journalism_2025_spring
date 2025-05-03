@@ -48,6 +48,7 @@ summary <- read_csv("data/OCTOBER-DECEMBER-2024-SOD-SUMMARY-GRID-FINAL.csv")
 
 ```
 
+FIONA PRIMARY
 ---cleaning transaction data---
 
 ```{r}
@@ -111,6 +112,7 @@ group_count <- function(input_df, group_column_name='n()', state_filter=NA, star
 group_count(transactions)
 
 ```
+FIONA PRIMARY
 Transactions Details brief information: 
 - Rows: 129,843
 - Columns: 18
@@ -201,6 +203,7 @@ Transactions Details brief information:
     Besides the data that is missing all over the csv that we would love to have to make our analysis more complete and comprehensive, some information that would have been great to have included in this dataframe would be directly stating party affiliations when applicable. This would largely help make a more diverse data analysis across party priorities rather than just focusing on whole departments, committees, organizations etc. and then doing even more research attempting to figure out if there is a party-pushing motive or not (if that can even be gleaned). Other than that (lack of original data and party affiliation), this dataset has a decent amount of info from our first glance. Something else might pop up later, and if it does, we shall record it as a limit. 
 
 
+FIONA PRIMARY
 ---cleaning summary data---
 
 ```{r}
@@ -384,8 +387,8 @@ grouped_by_reps |>
 ```
 
 Mira primary
-Question Two: 
-Basically what I did here was I wanted to look at the spending between the House Caucuses in 2024 (Republican and Democrat). First I made a new dataset with just the rows from the caucuses. Then I looked at the spending based on the category and made a bar chart!I was interested that Democrats spent a lot more than Republicans on personal compensation. Then there's another column called DESCRIPTION which has a more specific description of the expenditures. I put the dataset into OpenRefine to see if it could find any clusters but it failed on me. I then tried asking Chat to do it and it did not. I need to figure out how to group these - it might have to be manually but I will do that for the next assignment. Overall it's clear that Democrats spent more paying their employees than Republicans, which is super interesting/fascinating/peculiar/I want to know why. 
+Question Two: WHAT DID SPENDING BETWEEN HOUSE CAUCUSES IN 2024 (BOTH MAJOR PARTIES) LOOK LIKE?
+Basically what I did here was I wanted to look at the spending between the House Caucuses in 2024 (Republican and Democrat). First I made a new dataset with just the rows from the caucuses. Then I looked at the spending based on the category and made a bar chart! I was interested that Democrats spent a lot more than Republicans on personal compensation. Then there's another column called DESCRIPTION which has a more specific description of the expenditures. I put the dataset into OpenRefine to see if it could find any clusters but it failed on me. I then tried asking Chat to do it and it did not. I need to figure out how to group these - it might have to be manually but I will do that for the next assignment. Overall it's clear that Democrats spent more paying their employees than Republicans, which is super interesting/fascinating/peculiar/I want to know why. 
 ```{r}
 #looking at expenditures between the House Caucuses in 2024 
 party_caucus <- transactions |>
