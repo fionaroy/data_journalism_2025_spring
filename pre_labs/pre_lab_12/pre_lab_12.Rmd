@@ -39,9 +39,7 @@ Let's read in this data and examine it:
 
 ### Task 2: Read in data
 
-**Task** Run the following code and describe the dataframe it outputs.
-
-**Answer**
+**Task** Run the following code and describe the dataframe it outputs. **Answer**
 
 ```{r}
 releases <- read_rds("data/cardin_releases.rds")
