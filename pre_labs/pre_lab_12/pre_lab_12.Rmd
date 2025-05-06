@@ -39,7 +39,9 @@ Let's read in this data and examine it:
 
 ### Task 2: Read in data
 
-**Task** Run the following code and describe the dataframe it outputs. **Answer**
+**Task** Run the following code and describe the dataframe it outputs.
+
+**Answer** Dataframe includes, for all of Cardin's press releases, the date, title, url, and full text of each document.
 
 ```{r}
 releases <- read_rds("data/cardin_releases.rds")
@@ -78,7 +80,7 @@ What we want to do is to make the `text` column easier to analyze. Let's say we 
 
 ### Task 4: Remove URLs from content
 
-**Task** Run the following code.
+**Task** Run the following code. 
 
 ```{r}
 releases <- releases |>
@@ -89,7 +91,9 @@ If you are trying to create a list of unique words, R will treat differences in 
 
 ### Task 5: Trying out unique
 
-**Task** Run the following code and describe what the `unique` function does to the original list of words. **Answer**
+**Task** Run the following code and describe what the `unique` function does to the original list of words. 
+
+**Answer** The unique function gets rid of the duplicated version of the listed words or characters. (it keeps only the first mention of each listed word/character).
 
 ```{r}
 a_list_of_words <- c("Dog", "dog", "dog", "cat", "cat", ",")
@@ -100,7 +104,9 @@ Fortunately, this is a solved problem with tidytext, which has a function called
 
 ### Task 6: Trying out unnest_tokens
 
-**Task** Run the following code and describe the output of using the `unnest_tokens` function. **Answer**
+**Task** Run the following code and describe the output of using the `unnest_tokens` function. 
+
+**Answer** The output of unnest_tokens function breaks down the text column of the releases dataframe into a singular column dataframe where each and every word becomes its own individual row. All lowercase and punctuation is also removed.
 
 ```{r}
 unique_words <- releases |> select(text) |>
@@ -110,7 +116,9 @@ View(unique_words)
 
 ### Task 7: Make a column chart
 
-**Task** Run the following code and describe what the resulting graphic shows. Is it interesting? **Answer**
+**Task** Run the following code and describe what the resulting graphic shows. Is it interesting? 
+
+**Answer** It is not interesting, the most commonly used words are connecting words, filler words; nothing of particular note/not noteworthy. 
 
 Now we can look at the top words in this dataset. Let's limit ourselves to making a plot of the top 25 words, and we'll use the function `count` to do the counting:
 
@@ -161,7 +169,9 @@ From there, we can get a simple word frequency by just grouping them together an
 
 ### Task 9: Using anti_join
 
-**Task** Run the following code and describe the results. Is it more interesting than before? **Answer**
+**Task** Run the following code and describe the results. Is it more interesting than before?
+
+**Answer** Yes, these results are a lot more interesting as they don't contain only filler/connecting words, but rather descriptive words that would provide insight to Cardin's priorities/what he is most invovled with at this point in time.
 
 ```{r}
 unique_words |>
@@ -194,7 +204,9 @@ Then we can create top 10 lists for both of them and compare:
 
 ### Task 11: Create dataframes with the top 10 words in each year
 
-**Task** Run the following code and describe the results. **Answer**
+**Task** Run the following code and describe the results.
+
+**Answer** For 2022, it seems the top words are focused around community funding for Baltimore, specifically focusing on health care and governmental action on behalf of the communities health. For 2024, similarly to 2022, the key words seem to be prioritizing bringing to Baltimore health care funding for the community, but this time there is an attached number -- million -- which brings into question the amount of funding, not just a call for it.
 
 ```{r}
 unique_words_2022 |>
@@ -232,7 +244,9 @@ So this block is is going to do the following:
 
 ### Task 12: Create a dataframe with the top 10 two-word phrases for 2022
 
-**Task** Run the following code and describe the results. **Answer**
+**Task** Run the following code and describe the results.
+
+**Answer** The results of this show that the top two-word phrases for Cardin's 2022 releases are amount included (a focus on money). Next the results show that this is most likely referring to health care, and then which specific cities or county are most likely affected by this call for funds for health care.
 
 ```{r}
 releases |>
@@ -252,7 +266,9 @@ And we already have a different, more nuanced result. Health was among the top s
 
 ### Task 13: Create a dataframe with the top 10 two-word phrases for 2024
 
-**Task** Run the following code and describe the results. **Answer**
+**Task** Run the following code and describe the results.
+
+**Answer** Very similar to 2022's results, except the first results this time are "health care". Other than that, there is still the focus on the "amount awarded" and the specific locations of Maryland most connected to these topics. 
 
 ```{r}
 releases |>
@@ -288,7 +304,9 @@ library(textstem)
 
 ### Task 15: Stemming vs. Lemmatization
 
-**Task** Run the following code and describe the differences between the two results. Which one might be more useful for the press release data? **Answer**
+**Task** Run the following code and describe the differences between the two results. Which one might be more useful for the press release data?
+
+**Answer** stem_words seems to have taken off the endings the original list of words (the root). lemmatize_words seems to have just reduced the words to their primary word (getting rid of tense is seems). I think the one that might be more useful for the press releases is lemmatize_words because it can group all types of words that are similar at their core (despite tense differences etc.) which can help with analysis.
 
 ```{r}
 dw <- c('driver', 'drive', 'drove', 'driven', 'drives', 'driving')
@@ -303,7 +321,9 @@ Let's try lemmatization on the 2024 unique words, and then compare the top ten t
 
 ### Task 16: Lemmatization vs. Words
 
-**Task** Run the following code and describe the differences between the two results. Which one is more useful? **Answer**
+**Task** Run the following code and describe the differences between the two results. Which one is more useful?
+
+**Answer** Between the two years, 2022 seems to have prioritized fund(ing), the community, and support as their top three (which isn't very specific until you get further down the list and note that it is most likely about Baltimore). 2024 sees Baltimore at the top of the list, with support, funding, and million right below it painting a pretty clear picture of what is being prioritized (especially since it mentions word like health also which 2022 doesn't). Thus, I think the most useful one is 2024 because it is more specified.  
 
 ```{r}
 unique_words_2024_lemma <- lemmatize_words(unique_words_2024$word) |> as_tibble() |> rename(word = value)
@@ -329,7 +349,9 @@ Another popular use of text analysis is to measure the sentiment of a word - whe
 
 ### Task 17: Load the bing lexicon and produce sentiments for our 2022 and 2024 unique words
 
-**Task** Run the following code and describe the results. Do any of the sentiments seem incorrect or counter-intuitive? **Answer**
+**Task** Run the following code and describe the results. Do any of the sentiments seem incorrect or counter-intuitive?
+
+**Answer** This created a new dataframe where each word is listed as either positive or negative in connotation, and the amount of times each word has been recorded. No, the sentiments seem pretty accurate and intuitive if the words are being read at face-value in the most general of ways. But of course close analysis would still have to be used for each word as context means everything, and sometimes something that is listed as a negative like "cancer" could actually be a positive in some cases depending on the information being parsed through.  
 
 ```{r}
 bing <- get_sentiments("bing")
@@ -347,3 +369,8 @@ View(bing_word_counts_2024)
 ```
 
 Gauging the sentiment of a word can be heavily dependent on the context, and as with other types of text analysis sometimes larger patterns are more meaningful than individual results. But the potential with text analysis is vast: knowing what words and phrases that public officials employ can be a way to evaluate their priorities, cohesiveness and tactics for persuading voters and their colleagues. And those words and phrases are data.
+
+
+
+
+
