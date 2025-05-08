@@ -430,9 +430,44 @@ party_caucus |>
 write_csv(party_caucus, "data/party_caucus.csv")
 ```
 
+fiona primary
+Question Three: WHAT DID REP'S SPEND THE MOST MONEY ON, ON AVERAGE FOR 2025 FISCAL YEAR AND QUARTER ONE OF 2025 FISCAL YEAR?
 
-Question Three:
+explain why they are different people --> one whole year, one just quarter 1
+```{r}
+##searching for the rep that spent the most money through summary first; going through year data first##
+top_rep_spend_sum_ytd <- summary |>
+  group_by(ORGANIZATION) |>
+  summarise(
+    total_spent_yearly = sum(YTD_AMOUNT)
+  ) |>
+  filter(str_detect(ORGANIZATION, "HON.")) |>
+  arrange(desc(total_spent_yearly))
 
+top_rep_spend_sum_ytd
+##checked through data real quick, the top INDIVIDUAL rep spender was 2024 HON JENNIFFER GONZALEZ-COLON with YTD --> 6593193.78 dollars##
+##looked it up; she is gov. Puerto Rico rn, but was rep in 2024##
+
+##searching for the rep that spent the most money through summary first; going through quarter data to see if there is a difference in results##
+top_rep_spend_sum_qtd <- summary |>
+  group_by(ORGANIZATION) |>
+  summarise(
+    total_spent_quarterly = sum(QTD_AMOUNT)
+  ) |>
+  filter(str_detect(ORGANIZATION, "HON.")) |>
+  arrange(desc(total_spent_quarterly))
+
+top_rep_spend_sum_qtd
+##the top INDIVIDUAL rep spender for QUARTERLY spending (quarter 1 2025 fiscal year) is 2024 HON. RO KHANNA --> 2278613.82	dollars##
+##looked it up; rep for 17th district California##
+
+```
+
+```{r}
+##now going to transaction dataframe to search for all expenditure data pertaining to the top spender between the yearly and quarterly to analyze what, exactly, it is they are spending the most money on##
+
+
+```
 
 
 Question Four:
