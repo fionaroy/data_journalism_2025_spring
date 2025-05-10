@@ -691,7 +691,7 @@ Mira primary
 Question Five: IS THERE ANY SPECIFIC DATA THAT SHOWS DIRECT INFLUENCE OVER SPECIFIC LEGISLATION THAT WAS ATTEMPTED, OR SUCCESSFULLY IMPLEMENTED, LEGISLATION IN THE PAST YEAR ON ACCOUNT OF BEING SWAYED BY EXPENDITURE MONEY?
   publications/reference material saw the highest increase from 2022 to 2024
   personal compensation saw the biggest decrease
-  can possibly start the questions to brew for a story on why expenditure priority changed
+  can possibly start the questions to brew for a story on why expenditure priority changed and provide basis for finishing out answering this question (putting us on right track)
 
 ```{r}
 detail_22_sod <- read_csv("data/OCT-DEC-2022-SOD-DETAIL-GRID-FINAL.csv") |>
@@ -710,4 +710,9 @@ joined <- accountability_22 |>
   arrange(desc(difference))
 
 ```
+
+-- our most newsworthy finding as of right now (which still is not that flushed out due to the overwhelming lack of data provided to us in raw csv's) --
+
+most likely question four has the biggest potential --> it tracks change in expenditure data (roughly at this point in time, but hopefully maybe will be stronger before final submission) from 2016 findings to first quarter 2025 fiscal year. I think this has the biggest potential to provide substantial findings in where the house of rep's is spending, or not spending, their money so far. and so far, we've already proved that there have been small, if not also significant, changes in their spending which could be fascinating to track more thoroughly if possible 
+
 
