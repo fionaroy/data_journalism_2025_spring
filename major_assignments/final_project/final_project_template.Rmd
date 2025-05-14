@@ -470,6 +470,7 @@ top_rep_spend_sum_qtd
 
 ```
 
+
 ```{r}
 ##now going to transaction dataframe to search for all expenditure data pertaining to the top spender between the yearly and quarterly to analyze what, exactly, it is they are spending the most money on##
 top_ytd_JGC <- transactions |>
@@ -711,8 +712,8 @@ joined <- accountability_22 |>
 
 ```
 
--- our most newsworthy finding as of right now (which still is not that flushed out due to the overwhelming lack of data provided to us in raw csv's) --
+-- Most NewsWorthy Findings so Far --
 
-most likely question four has the biggest potential --> it tracks change in expenditure data (roughly at this point in time, but hopefully maybe will be stronger before final submission) from 2016 findings to first quarter 2025 fiscal year. I think this has the biggest potential to provide substantial findings in where the house of rep's is spending, or not spending, their money so far. and so far, we've already proved that there have been small, if not also significant, changes in their spending which could be fascinating to track more thoroughly if possible 
+  Out of all of our cleaning and data analysis of House of Representative Expenditure Data so far for this project, the most newsworthy findings thus far have been our findings for question four: Has the House of Representatives spending changed since the 2016 Brookings article? What stuck out to us the most in these findings was not only the fact that it covered roughly the span of ten years worth of expenditure data --in the sense that we could track ten years worth of changed (or not changed) priorities in regard to federal spendings-- but also what the federal expenditure data is specifically continuously (or not continuously) lacking in regard to their data record keeping abilities. So far, among all of our questions we've noticed strong continued trend of poor record keeping which has severely limited our ability to properly analyze the House of Representative expenditures. However, this is also a limited boon as it has increased the amount of questions we originally had (as in the more we dig in, the more questions we have about why the data is missing). Pertaining to this question, what we found follows the trend we've noticed throughout all the data in that the most notable differences in expenditure data over the years is in regard to personal compensation, 'other' (due to lack of provided data), and personal office spending. We found that in each of these categories, spending increased by large amounts from 2016 to 2024/5.
 
 
