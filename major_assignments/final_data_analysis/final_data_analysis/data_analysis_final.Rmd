@@ -699,7 +699,7 @@ transactions <- transactions |>
 ```
 
 ```{r}
-#looking for differences in expenditures between 2022 and 2024/5#
+#looking for differences in expenditures between 2022 and 2024/5##chat was somewhat consulted for this#
 detail_22_sod <- read_csv("transactions_2022.csv") |>
   clean_names()
 
